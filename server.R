@@ -12,13 +12,6 @@ library(tidyverse)
 library(DT)
 library(shinycssloaders)
 
-# Portfolio Symbols
-# "SPY", "MDY", "IWM"       # Large-Mid-Small Cap equities
-# "EFA", "EEM"              # Intl.and emerging markets
-# "AGG","TIP","TLT", "LQD"  # Bonds
-# "GSG",                    # Commodities
-# "RWR", "RWX",  "MBB"      # Real Estate
-# "SHV"                     # Cash
 monthly_rets <- readRDS("data/monthly_rets_tbl.rds")
 ticker_choices <- colnames(monthly_rets)[-1]
 
@@ -64,7 +57,9 @@ shinyServer(function(input, output, session) {
             arrange(date) %>% 
             mutate(idx = cumprod(1 + return)) %>% 
             ggplot(aes(date, idx, color = ticker)) +
-            geom_line()
+            geom_line(size = 1) +
+            theme_bw() +
+                theme(legend.position = "top")
         )
         
     })

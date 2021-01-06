@@ -44,7 +44,6 @@ shinyUI(dashboardPage(
                 icon = icon("newspaper")
             )
         ),
-        
         sliderInput(
             "daterange",
             "Select a Date Range",
@@ -54,13 +53,13 @@ shinyUI(dashboardPage(
             timeFormat = "%b %Y"#,
             # width = 400
         ),
-        
+        actionButton("showPlot", "Plot", icon("caret-right"), class = "btn-warning"), # Bootstrap class        
         selectizeInput("tickers",
                     label = "Select Tickers:",
                     choices = ticker_choices,
                     multiple = TRUE),
-        checkboxInput('all', 'Select All/None', value = TRUE),
-        br()
+        checkboxInput('all', 'Select All/None', value = TRUE)
+        
     ),
     
     # Body Section ####
@@ -69,7 +68,40 @@ shinyUI(dashboardPage(
                 tabsetPanel(
                     tabPanel(
                         "Returns",
-                        actionButton("showPlot", "Show Plot!"),
+                        br(),
+                        h4("Tickers"),
+                        box(width = 4,
+                               withTags(
+                                    div(
+                                        b("Large-Mid-Small Cap equities"),
+                                        ul(li("SPY, MDY, IWM")),
+                                        b("Intl.and emerging markets"),
+                                        ul(li("EFA, EEM"))
+                                    )
+                                    )
+                               ),
+                        box(width = 4,
+                               withTags(
+                                   div(
+                                       b("Bonds"),
+                                       ul(li("AGG, TIP, TLT, LQD")),
+                                       b("Commodities"),
+                                       ul(li("GSG"))
+                                   )
+                               )
+                        ),
+                        box(width = 4,
+                            withTags(
+                                div(
+                                    b("Real Estate"),
+                                    ul(li("RWR, RWX, MBB")),
+                                    b("Cash"),
+                                    ul(li("SHV"))
+                                )
+                            )
+                        ),
+                        
+                        br(),
                         plotOutput("returnsPlot")
                     ),
                     tabPanel(## * State Dashboard ####
