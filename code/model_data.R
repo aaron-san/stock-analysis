@@ -25,7 +25,6 @@ slippage_pct <- c(.0005)
 friction_pct <- commission_pct + slippage_pct
 
 ## Portfolio Symbols
-data_source <- c("yahoo")
 universe <- c("SPY", "MDY", "IWM",      # Large-Mid-Small Cap equities
               "EFA", "EEM",             # Intl.and emerging markets
               "AGG","TIP","TLT", "LQD", # Bonds
