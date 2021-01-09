@@ -28,44 +28,25 @@ shinyUI(dashboardPage(
     dashboardHeader(title = "Stock Analysis"),
     
     dashboardSidebar(
+        width = 200,
         
         ## * Initial Menu Tabs ####
         sidebarMenu(
-            menuItem("A Shiny App by Theodore Cheek",
-                     icon = NULL#,
-                     # href = "https://www.linkedin.com/in/theodorecheek/"
+            menuItem("A Shiny App by Aaron Hardy",
+                     icon = NULL,
+                     href = "https://www.linkedin.com/in/aaron-hardy-651b2410/"
                      ),
-            menuItem('State Dashboard',
-                     tabName = 'Breakdown',
-                     icon = icon("map")),
             menuItem(
                 'Returns',
                 tabName = 'Returns',
-                icon = icon('users')
+                icon = icon('chart-line')
             ),
             menuItem(
                 'Backtest',
                 tabName = "Backtest",
-                icon = icon("newspaper")
+                icon = icon("sliders-h")
             )
-        ),
-        sliderInput(
-            "daterange",
-            "Select a Date Range",
-            min = monthly_rets %>% pull(date) %>% min(),
-            max = monthly_rets %>% pull(date) %>% max(),
-            value = c(as.Date("2014-01-01"), monthly_rets %>% pull(date) %>% max()),
-            timeFormat = "%b %Y"#,
-            # width = 400
-        ),
-        actionButton("showPlot", "Plot", icon("caret-right"), class = "btn-info"), # Bootstrap class
-        
-        
-        selectizeInput("tickers",
-                    label = "Select Tickers:",
-                    choices = ticker_choices,
-                    multiple = TRUE),
-        checkboxInput('all', 'Select All/None', value = TRUE)#,
+        )#,
         # screenshotButton(selector = ".content", label = "Take a Screenshot")
     ),
     
@@ -83,48 +64,77 @@ shinyUI(dashboardPage(
                     tabPanel(
                         "Returns",
                         br(),
-                        h4("Tickers"),
                         fluidRow(
-                            column(width = 4,
-                            wellPanel(
-                                withTags(
-                                    span(
-                                        b("Large-Mid-Small Cap equities"),
-                                        ul(li("SPY, MDY, IWM")),
-                                        b("Intl.and emerging markets"),
-                                        ul(li("EFA, EEM"))
-                                    )
-                            )
+                            box(
+                                width = 12,
+                                title = "Tickers",
+                                status = "primary",
+                                solidHeader = F,
+                                # wellPanel(
+                                column(width = 4,
+                                         withTags(span(
+                                             b("Large-Mid-Small Cap equities"),
+                                             ul(li("SPY, MDY, IWM")),
+                                             b("Intl.and emerging markets"),
+                                             ul(li("EFA, EEM"))
+                                         ))),
+                                  column(width = 4,
+                                         withTags(span(
+                                             b("Bonds"),
+                                             ul(li("AGG, TIP, TLT, LQD")),
+                                             b("Commodities"),
+                                             ul(li("GSG"))
+                                         ))),
+                                  column(width = 4,
+                                         withTags(span(
+                                             b("Real Estate"),
+                                             ul(li("RWR, RWX, MBB")),
+                                             b("Cash"),
+                                             ul(li("SHV"))
+                                         )))
+                                # )
+                                )
+                        ),
+                        fluidRow(
+                            box(
+                                width = 12,
+                                title = "Choose plot parameters",
+                                status = "primary",
+                                solidHeader = F,
+                                column(6,
+                                    sliderInput(
+                                       "daterange",
+                                       "Select a Date Range",
+                                       min = monthly_rets %>% pull(date) %>% min(),
+                                       max = monthly_rets %>% pull(date) %>% max(),
+                                       value = c(as.Date("2014-01-01"), monthly_rets %>% pull(date) %>% max()),
+                                       timeFormat = "%b %Y"#,
+                                       # width = 400
+                                   )
+                                ),
+                                column(4,
+                                       selectizeInput("tickers",
+                                                      label = "Select Tickers:",
+                                                      choices = ticker_choices,
+                                                      multiple = TRUE)
+                                ),
+                                column(2,
+                                       checkboxInput('all', 'Select All/None', value = TRUE),
+                                       actionButton("showPlot", "Plot", icon("caret-right"), class = "btn-info"), # Bootstrap class
+                                )
                             )
                         ),
-                        column(width = 4,    
-                            wellPanel(
-                                    withTags(
-                                        span(
-                                            b("Bonds"),
-                                            ul(li("AGG, TIP, TLT, LQD")),
-                                            b("Commodities"),
-                                            ul(li("GSG"))
-                                        )
-                                    )
-                                )
-                            ),
-                        column(width = 4,
-                            wellPanel(
-                                withTags(
-                                    span(
-                                        b("Real Estate"),
-                                        ul(li("RWR, RWX, MBB")),
-                                        b("Cash"),
-                                        ul(li("SHV"))
-                                    )
+                        fluidRow(
+                            box(
+                                width = 12, 
+                                title = "Returns Index",
+                                status = "primary",
+                                solidHeader = F,
+                                column(width = 12,
+                                       plotlyOutput("returns_plot")
                                 )
                             )
-                        )
                         ),
-                        br(),
-                        box(width = 12, 
-                            plotlyOutput("returns_plot")),
                         p("This is the bottom")
                     ),
                     tabPanel(## * State Dashboard ####
@@ -144,11 +154,12 @@ shinyUI(dashboardPage(
                 tabsetPanel(
                     ## * Filtered, Searchable Data ####
                     tabPanel("Backtest",
+                             br(),
                              fluidRow(
                                  box(
                                      title = "Test a Decision Rule",
                                      status = "primary",
-                                     solidHeader = T,
+                                     solidHeader = F,
                                      wellPanel(
                                          p("Here you can explore custom decision rules directly below. Simply 
                                      enter the condition in a format similar to these:"),
@@ -166,7 +177,9 @@ shinyUI(dashboardPage(
                                      width = 12
                                  )
                                  )
-                             )
+                             ),
+                    tabPanel("Explanation",
+                             p("Here is the explanation..."))
                     )
                 )
     ))

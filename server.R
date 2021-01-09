@@ -59,6 +59,7 @@ shinyServer(function(input, output, session) {
                 ggplot(aes(date, idx, color = ticker)) +
                 geom_line(size = .5) +
                 theme_bw() +
+                labs(x = NULL, y = "Index Level") +
                 theme(legend.position = "top")
         )
         ggplotly(returns_plot) %>% 
