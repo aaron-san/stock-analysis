@@ -13,6 +13,8 @@ library(DT)
 library(plotly)
 library(quantmod)
 library(PerformanceAnalytics)
+library(lubridate)
+library(sever)
 
 # library(ggrepel)
 # library(shinycssloaders)
@@ -25,16 +27,26 @@ asset_returns <- read_rds("data/asset_returns.rds")
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
+
+    # sever()
     
     observe({
-        # if input$all is TRUE (basically a SELECT ALL option), all choices will be selected
-        # if input$all is FALSE (basically a NONE option), none of the choices will be selected
-
         updateSelectInput(session, 'tickers', choices = ticker_choices,
                           selected = if(input$all) ticker_choices
         )
     })
-     
+    
+    min_date <- reactive({
+        switch(input$date_lookback,
+               `All` = min(monthly_rets$date),
+               `10 yrs` = max(monthly_rets$date) %m-% years(10),
+               `5 yrs` = max(monthly_rets$date) %m-% years(5),
+               `1 yr` = max(monthly_rets$date) %m-% years(1),
+               `3 mon` = as.Date(max(monthly_rets$date)) %m-% months(3))
+    })
+    
+    
+    
     output$returns_plot <- renderPlotly({
         
         # Take a dependency on input$showPlot
@@ -43,12 +55,13 @@ shinyServer(function(input, output, session) {
         # Show message if input tickers are not selected
         validate(need(isolate(input$tickers) != "", "Please select tickers and click 'Plot'"))
         # req(isolate(input$tickers))
-        
+    
         isolate(
             returns_plot <-
                 monthly_rets %>% 
-                filter(date >= min(input$daterange) &
-                           date <= max(input$daterange)) %>%
+                # filter(date >= min(input$daterange) &
+                #            date <= max(input$daterange)) %>%
+                filter(date >= min_date()) %>% 
                 select(date, input$tickers) %>%
                 pivot_longer(-date, names_to = "ticker", values_to = "return") %>%
                 # mutate(return = scales::percent_format()(return)) %>% 
@@ -69,9 +82,9 @@ shinyServer(function(input, output, session) {
     output$returns_table = DT::renderDataTable({
         datatable(
             monthly_rets %>%
-                filter(
-                    date >= min(input$daterange) &
-                        date <= max(input$daterange)
+                filter(date >= min_date()
+                    # date >= min(input$daterange) &
+                    #     date <= max(input$daterange)
                 ) %>%
                 select(date, input$tickers) %>%
                 mutate(across(
@@ -95,13 +108,13 @@ shinyServer(function(input, output, session) {
     })
     
     
-        
+    # Parse the decision rule    
     fun <- eventReactive(input$bt_button, {
-        
-        # if_else(x < 0, 1, 0)
         eval(parse(text = paste('get_signal <- function(x) { return(',
                                 input$signal_rule, ')}', collapse = '')))
     }) #, ignoreInit = TRUE)
+    
+    
         
     output$backtest_plot <- renderPlot({
         # Step 2: Create your indicator
@@ -109,10 +122,27 @@ shinyServer(function(input, output, session) {
             need(isolate(input$signal_rule), "Enter signal rule.")
         )
         
+        asset_returns_filt <- reactive({
+            asset_returns[paste(isolate(input$daterange_bt), collapse = "::")]
+            # asset_returns[paste(c("2001-12-13", "2003-12-31"), collapse = "::")]
+            
+        })
+        
+        
+        invested_asset_returns <- reactive({
+            asset_returns_filt() %>% 
+                .[, isolate(c(input$invested_ticker))]
+        })
+        
+        
+        
         signals <-
-            asset_returns %>%
+            asset_returns_filt() %>% 
+            .[, isolate(input$ticker_decision_rule)] %>%
+            # .[, "EEM"] %>% 
             apply(., 2, fun()) %>%
-            as.xts(order.by = index(asset_returns))
+            # apply(., 2, function(x) if_else(x < -0.2, 1, 0)) %>%
+            as.xts(order.by = index(asset_returns_filt()))
         
         get_weights <- function(x, data) {
             x / rowSums(data)
@@ -132,14 +162,14 @@ shinyServer(function(input, output, session) {
         
         # Signals are generated the monthly before performance is earned
         strat_returns <-
-            (merge(asset_returns, cash_returns) * stats::lag(wts) - 0.0005) %>%
+            (merge(invested_asset_returns(), cash_returns) * stats::lag(wts) - 0.0005) %>%
             rowSums() %>%
             xts(order.by = index(wts)) %>%
             na.omit()
         colnames(strat_returns) <- "Strategy"
     
         # Step 3: Use indicator to create equity curves
-        rets <- merge(asset_returns$SPY, strat_returns) %>% na.omit()
+        rets <- merge(asset_returns_filt()[, isolate(input$invested_ticker)], strat_returns) %>% na.omit()
         
         # Step 4: Evaluate strategy performance
         # table.DownsideRisk(rets)
@@ -169,6 +199,35 @@ shinyServer(function(input, output, session) {
         })
     })
     
+
+
+
+
+# library(gapminder) # for gapminder dataset
+# library(plotly) # for plotly charts and %>% pipe operator
+# 
+# ## Size of the scatter data point will represent the population
+# ## Color of the scatter data point will represent the continent
+# 
+# gapminder %>% 
+#     plot_ly() %>%  
+#     # add frame argument for animation and map to the variable needed on the timeline
+#     add_markers(x=~gdpPercap, y=~lifeExp, 
+#                 frame=~year, 
+#                 size = ~pop,
+#                 color=~continent,
+#                 marker=list(sizemode="diameter"),
+#                 text=~paste("Life Expectancy: ", round(lifeExp,1), 
+#                             "<br>",
+#                             "GDP Per Capita:", round(gdpPercap,1), 
+#                             "<br>", 
+#                             "Country:", country, 
+#                             "<br>", 
+#                             "Population:", pop), 
+#                 hoverinfo= "text") %>% 
+#     layout(title="Animated Plotly Bubble Plot",
+#            xaxis=list(title="GDP Per Capita (log scale)", type="log"),
+#            yaxis=list(title= "Life Expectancy"))
 
 
 

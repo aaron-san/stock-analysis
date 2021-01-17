@@ -1,0 +1,24 @@
+
+$font-stack: Helvetica, sans-serif;
+$primary-color: #333;
+$secondary-color: gray-dark;
+
+
+
+body { 
+	font: 100% $font-stack;
+	color: $secondary-color;
+	margin: 122px * .01; 
+}
+
+
+navbar-primary {
+	background-color: $secondary-color;
+
+}
+
+
+.well {
+	
+	background-color: $primary-color;
+}

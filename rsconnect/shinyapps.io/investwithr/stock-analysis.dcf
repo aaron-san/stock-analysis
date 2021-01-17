@@ -1,0 +1,13 @@
+name: stock-analysis
+title: stock-analysis
+username:
+account: investwithr
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3456737
+bundleId: 4078142
+url: https://investwithr.shinyapps.io/stock-analysis/
+when: 1610266537.14472
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: README.md|ideas/asdfsdfsa.PNG|ideas/Captureaewre.PNG|ideas/Captureasfdsf.PNG|ideas/shiny brushed points.txt|www/sketchy_bootstrap.css|www/slate_bootstrap.css|www/style.css
