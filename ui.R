@@ -1,19 +1,6 @@
 
 
 
-# bs4Card
-# function (..., inputId = NULL, title = NULL, footer = NULL, status = NULL,
-#           elevation = NULL, solidHeader = FALSE, headerBorder = TRUE,
-#           gradientColor = NULL, width = 6, height = NULL, collapsible = TRUE,
-#           collapsed = FALSE, closable = TRUE, maximizable = FALSE,
-#           labelStatus = NULL, labelText = NULL, labelTooltip = NULL,
-#           dropdownMenu = NULL, dropdownIcon = "wrench", overflow = FALSE,
-#           enable_sidebar = FALSE, sidebar_content = NULL, sidebar_width = "25%",
-#           sidebar_background = "#333a40", sidebar_start_open = FALSE,
-#           sidebar_icon = "cogs")
-
-
-
 # library(shinyobjects)
 # load_reactive_objects()
 #
@@ -40,11 +27,10 @@ library(sass)
 # library(bootstraplib) # for using bootstrap css variables in Shiny
 
 # Convert Sass to CSS
-sass <- readLines("www/custom.scss")
-writeLines(sass, paste0("www/custom - ", gsub("-", " ", Sys.Date()), ".css"))
+# sass <- readLines("www/custom.scss")
+# writeLines(sass, paste0("www/custom - ", gsub("-", " ", Sys.Date()), ".css"))
 
-# sass::sass(sass_file("www/custom.scss"),
-#            output = paste0("www/custom - ", gsub("-", " ", Sys.Date()), ".css"))
+
 
 # Get current css file
 current_css <-
@@ -60,17 +46,17 @@ ticker_choices <- colnames(monthly_rets)[-1]
 # Define UI for application that draws a histogram
 shinyUI(
     ui = bs4DashPage(
-        # use_sever(),
-        # sidebar_collapsed = TRUE,
-        # controlbar_collapsed = TRUE,
+        
+        sidebar_collapsed = TRUE,
+        controlbar_collapsed = TRUE,
         
         navbar = bs4DashNavbar(
             skin = "light", status = "white", sidebarIcon = "bars", 
-            leftUi = actionButton("goButton1", "Go1"), 
-            rightUi = actionButton("goButton2", "Go2"),
+            # leftUi = actionButton("goButton1", "Go1"), 
+            rightUi = screenshotButton(selector = ".content", label = "Take a Screenshot"),
             fixed = TRUE,
-            # compact = TRUE,
-            p("Hi!")
+            compact = TRUE,
+            h4("Hi!")
         ),
         
         # Sidebar
@@ -98,18 +84,19 @@ shinyUI(
                 #                    href = "https://www.linkedin.com/in/aaron-hardy-651b2410/"),
                 bs4SidebarMenuItem('Returns',
                                    tabName = 'Returns',
-                                   icon = 'chart-line',
-                                   bs4SidebarMenuSubItem(
-                                       text = "Item 1",
-                                       tabName = "item1",
-                                       icon = "circle-thin"
-                                   )),
+                                   icon = 'chart-line'
+                                   # bs4SidebarMenuSubItem(
+                                   #     text = "Returns",
+                                   #     tabName = "Returns",
+                                   #     icon = "circle-thin"
+                                   # )
+                                   ),
                 
                 bs4SidebarMenuItem('Backtest',
                                    tabName = "Backtest",
                                    icon = "sliders-h")
-            ),
-            screenshotButton(selector = ".content", label = "Take a Screenshot")
+            )
+            
         ),
         
         controlbar = bs4DashControlbar(skin = "light"),
@@ -121,9 +108,9 @@ shinyUI(
         body = bs4DashBody(# shinythemes::themeSelector(),
             
             # Add custom css style
-            # tags$head(
-            #     tags$link(rel = "stylesheet", type = "text/css", href = current_css)
-            # ),
+            tags$head(
+                tags$link(rel = "stylesheet", type = "text/css", href = current_css)
+            ),
             
             bs4TabItems(
                 # 1st tab item
@@ -137,7 +124,7 @@ shinyUI(
                         bs4TabPanel(
                             tabName = "Returns",
                             br(),
-                            # 1st fluid row
+                            # 1st card
                             bs4Card(
                                 width = 12,
                                 title = "Tickers",
@@ -185,8 +172,10 @@ shinyUI(
                                 title = "Choose plot parameters",
                                 status = "primary",
                                 solidHeader = T,
-                                fluidRow(column(
-                                    10,
+                                # 1st row
+                                fluidRow(
+                                    column(
+                                    width = 5,
                                     # pickerInput(
                                     #     inputId = "tickers",
                                     #     label = "Select Tickers:",
@@ -201,16 +190,17 @@ shinyUI(
                                         choices = ticker_choices,
                                         multiple = TRUE
                                     )
-                                ),
-                                column(
-                                    2,
-                                    awesomeCheckbox('all',
-                                                    'Select All/None',
-                                                    value = TRUE)
-                                )),
+                                    ),
+                                    column(width = 2,
+                                           # style = "text-align: center;",
+                                       awesomeCheckbox(
+                                           width = 2, 
+                                           'all', 'Select All/None',
+                                                       value = TRUE))),
+                                # 2nd row
                                 fluidRow(
                                     column(
-                                        6,
+                                        width = 5,
                                         #  sliderInput(
                                         #     "daterange",
                                         #     "Select a Date Range",
@@ -226,11 +216,13 @@ shinyUI(
                                             choices = c("All", "10 yrs", "5 yrs", "1 yr", "3 mon"),
                                             selected = "All"
                                         )
-                                    ),
-                                    column(3,
-                                           actionButton(
-                                               "showPlot", "Plot", icon("caret-right"), class = "btn-info"
-                                           ))
+                                    ), 
+                                    column(width = 3,
+                                           # style = "text-align: center;",
+                                           actionButton("showPlot", 
+                                                        "Plot", 
+                                                        icon("caret-right"), 
+                                                        class = "btn-primary"))
                                 )
                             ),
                             # 3rd row
@@ -334,7 +326,10 @@ shinyUI(
                                         )
                                     ),
                                     column(width = 3,
-                                           actionButton("bt_button", "Plot"))), 
+                                           actionButton("bt_button", 
+                                                        "Plot",
+                                                        icon("caret-right"),
+                                                        class = "btn-primary"))), 
                                 fluidRow(
                                     # actionLink("infoLink", "Information Link", class = "btn-info"),
                                     plotOutput("backtest_plot")

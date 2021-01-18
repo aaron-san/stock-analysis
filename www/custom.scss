@@ -8,17 +8,24 @@ $secondary-color: gray-dark;
 body { 
 	font: 100% $font-stack;
 	color: $secondary-color;
-	margin: 122px * .01; 
+	margin: 122px * .1; 
 }
 
-
-navbar-primary {
-	background-color: $secondary-color;
-
-}
 
 
 .well {
 	
 	background-color: $primary-color;
+}
+
+
+.row {
+ vertical-align: bottom;
+}
+
+
+
+.navbar-primary {
+	background-color: $secondary-color;
+
 }

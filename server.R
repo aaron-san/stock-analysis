@@ -1,11 +1,8 @@
-#
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+
+# Debugging
+# library(shinyobjects)
+# load_reactive_objects()
+
 
 library(shiny)
 library(tidyverse)
@@ -51,6 +48,7 @@ shinyServer(function(input, output, session) {
         
         # Take a dependency on input$showPlot
         input$showPlot
+        req(isolate(min_date()))
         
         # Show message if input tickers are not selected
         validate(need(isolate(input$tickers) != "", "Please select tickers and click 'Plot'"))
@@ -61,7 +59,7 @@ shinyServer(function(input, output, session) {
                 monthly_rets %>% 
                 # filter(date >= min(input$daterange) &
                 #            date <= max(input$daterange)) %>%
-                filter(date >= min_date()) %>% 
+                filter(date >= min_date()) %>%
                 select(date, input$tickers) %>%
                 pivot_longer(-date, names_to = "ticker", values_to = "return") %>%
                 # mutate(return = scales::percent_format()(return)) %>% 
