@@ -1,23 +1,23 @@
 
 $font-stack: Helvetica, sans-serif;
-$primary-color: moccasin;
+$primary-color: #333;
 $secondary-color: dark-gray;
 
 
 
 body { 
 	font: 100% $font-stack;
-	//color: $secondary-color;
+	color: $secondary-color;
 	margin: 122px * .1; 
 }
 
 
-/*
+
 .well {
 	
 	background-color: $primary-color;
 }
-*/
+
 
 .row {
  vertical-align: bottom;
@@ -26,7 +26,7 @@ body {
 
 
 .navbar-primary {
-	//background-color: $secondary-color;
+	background-color: $secondary-color;
 
 }
 

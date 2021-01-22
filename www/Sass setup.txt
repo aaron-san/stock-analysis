@@ -1,0 +1,10 @@
+1. Change working directory
+	cd C:\Users\user\Desktop\Aaron\R\Shiny apps\stock-analysis
+
+2. Monitor the www directory for changes to scss files and compile css to the same folder (:www)
+
+	sass --watch www:www
+
+	(--OR--)
+
+	sass --watch www/custom.scss www/custom.css
