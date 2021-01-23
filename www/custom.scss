@@ -1,14 +1,17 @@
 
-$font-stack: Helvetica, sans-serif;
-$primary-color: moccasin;
-$secondary-color: dark-gray;
+$font-stack: "Times New Roman", Times, serif; //Helvetica, sans-serif; 
+$color-one: moccasin; 
+$color-two: darkgray;
+$color-three: darksalmon;
 
 
 
 body { 
-	font: 100% $font-stack;
+	font-family: $font-stack;
 	//color: $secondary-color;
 	margin: 122px * .1; 
+	color: black;
+    margin: 1px;
 }
 
 
@@ -26,17 +29,12 @@ body {
 
 
 .navbar-primary {
-	//background-color: $secondary-color;
+	background-color: $color-two;
 
 }
 
 
 
-body {
-  font: 100% Helvetica, sans-serif;
-  color: black;
-  margin: 1px;
-}
 
 
 span {
@@ -72,8 +70,8 @@ span > div[class=".form-group"] {
 }
 
 .btn-default {
-    background-color: moccasin;
-    border: 1px solid darkgray;
+    background-color: $color-one;
+    border: 1px solid $color-two;
     color: #444; 
     box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
 }
@@ -81,9 +79,9 @@ span > div[class=".form-group"] {
 
 .btn-default:hover, 
 .btn-default.active {
-    background-color: darksalmon;
+    background-color: $color-three;
     color: #2b2b2b;
-    border: 1px solid darkgray;
+    border: 1px solid $color-three;
 }
 
 
@@ -96,7 +94,7 @@ span > div[class=".form-group"] {
 }
 
 .sidebar-dark-danger .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-danger .nav-sidebar>.nav-item>.nav-link.active {
-    background-color: moccasin;
+    background-color: $color-one;
     color: black;
 }
 
@@ -114,7 +112,7 @@ span > div[class=".form-group"] {
     color: #2b2b2b;
     margin: 0;
     background-color: aquamarine;
-    border: 1px solid darkgray;
+    border: 1px solid $color-two;
     /*border-color: aquamarine;*/
     /*box-shadow: 4px 4px 13px #8888;*/
     box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
@@ -122,7 +120,7 @@ span > div[class=".form-group"] {
 
 .btn-primary:hover {
     background-color: lightsteelblue;
-    border: 1px solid darkgray;
+    border: 1px solid $color-two;
     box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
 }
 
@@ -177,8 +175,8 @@ ul > li.nav-item {
 
 .btn-light {
     color: #2b2b2b;
-    background-color: moccasin;
-    border: 1px solid darkgray;
+    background-color: $color-one;
+    border: 1px solid $color-two;
     box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
 }
 

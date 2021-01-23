@@ -32,8 +32,10 @@ source("modules/returnsReturnsModule.R")
 source("modules/backtestBacktestModule.R")
 
 # Convert Sass to CSS
-# sass <- readLines("www/custom.scss")
-# writeLines(sass, paste0("www/custom - ", gsub("-", " ", Sys.Date()), ".css"))
+sass(sass_file("www/custom.scss"),
+     output = "www/custom.css", cache = FALSE)
+
+# css <- sass(sass_file("www/custom.scss"), cache = NULL)
 
 
 # bs4DashGallery()
@@ -42,8 +44,13 @@ source("modules/backtestBacktestModule.R")
 # Define UI for application that draws a histogram
 shinyUI(
     ui = bs4DashPage(
+        
+        
+        
         sidebar_collapsed = TRUE,
         controlbar_collapsed = TRUE,
+        
+        
         
         navbar = bs4DashNavbar(
             skin = "light",
@@ -102,8 +109,14 @@ shinyUI(
         
         
         
+        
         # Body
-        body = bs4DashBody(# shinythemes::themeSelector(),
+        body = bs4DashBody(
+            
+            # Add custom css style
+            tags$head(
+                tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+            ),
             
             bs4TabItems(
                 bs4TabItem(
@@ -213,11 +226,8 @@ shinyUI(
                                 ))
                 )
             ))
-            ),
-        # Add custom css style
-        tags$head(
-            tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
-        )
+            )
+        
     )
     )
 
