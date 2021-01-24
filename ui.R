@@ -30,6 +30,7 @@ library(sass)
 
 source("modules/returnsReturnsModule.R")
 source("modules/backtestBacktestModule.R")
+source("modules/returnsReturnsTableModule.R")
 
 # Convert Sass to CSS
 sass(sass_file("www/custom.scss"),
@@ -166,13 +167,7 @@ shinyUI(
                                     ))),
                                     
                                     
-                                    returnsReturnsModuleUI("returns")
-                                    #... .module
-                                    
-                                    # 3rd row
-                                    # ,
-                                    
-                                    
+                                    returnsReturnsUI("returns")
                                 )
                                 
                             ),
@@ -180,15 +175,7 @@ shinyUI(
                         ),
                         
                         bs4TabPanel(tabName = "Returns Table",
-                                    bs4Card(
-                                        width = 12,
-                                        fluidRow(# title = "Incident Density Tracker by State",
-                                            # solidHeader = T,
-                                            # status = "primary",
-                                            DT::dataTableOutput("returns_table"),
-                                            # footer = "Hover for state-by-state incident stats, scaled below",
-                                            width = 12)
-                                    ))
+                                    returnsReturnsTableUI("returns_table"))
                     )
                     ),
                     bs4TabItem(
@@ -200,9 +187,8 @@ shinyUI(
                             bs4TabPanel(
                                 tabName = "Backtest",
                                 br(),
-                                # 1st row
                     
-                                backtestBacktestModuleUI("backtest")
+                                backtestBacktestUI("backtest")
                             ),
                     
                     bs4TabPanel(tabName = "Explanation",
@@ -225,7 +211,93 @@ shinyUI(
                                     )
                                 ))
                 )
-            ))
+            )),
+            bs4TabCard(
+                id = "tabcard",
+                title = "A card with tabs",
+                bs4TabPanel(
+                    tabName = "Tab 1", 
+                    active = FALSE,
+                    "Content 1"
+                ),
+                bs4TabPanel(
+                    tabName = "Tab 2", 
+                    active = TRUE,
+                    "Content 2"
+                ),
+                bs4TabPanel(
+                    tabName = "Tab 3", 
+                    active = FALSE,
+                    "Content 3"
+                )
+            ),
+            bs4Card(
+                solidHeader = FALSE,
+                title = "Status summary",
+                background = NULL,
+                width = 4,
+                status = "danger",
+                footer = fluidRow(
+                    column(
+                        width = 6,
+                        descriptionBlock(
+                            number = "17%", 
+                            number_color = "success", 
+                            number_icon = "fa fa-caret-up",
+                            header = "$35,210.43", 
+                            text = "TOTAL REVENUE", 
+                            right_border = TRUE,
+                            margin_bottom = FALSE
+                        )
+                    ),
+                    column(
+                        width = 6,
+                        descriptionBlock(
+                            number = "18%", 
+                            number_color = "danger", 
+                            number_icon = "fa fa-caret-down",
+                            header = "1200", 
+                            text = "GOAL COMPLETION", 
+                            right_border = FALSE,
+                            margin_bottom = FALSE
+                        )
+                    )
+                )
+            ),
+            fluidRow(
+                bs4ValueBox(
+                    value = 150,
+                    subtitle = "New orders",
+                    status = "primary",
+                    icon = "shopping-cart",
+                    href = "#"
+                ),
+                bs4ValueBox(
+                    value = "53%",
+                    subtitle = "New orders",
+                    status = "danger",
+                    icon = "cogs",
+                    footer = shiny::div("Hello World")
+                ),
+                bs4ValueBox(
+                    value = "44",
+                    subtitle = "User Registrations",
+                    status = "warning",
+                    icon = "sliders"
+                )
+            ),
+            ionicon(name ="heart"),
+            ionicon(name ="beer"),
+            fluidRow(
+                bs4UserCard(
+                    src = "https://adminlte.io/themes/AdminLTE/dist/img/user1-128x128.jpg",
+                    status = "info",
+                    title = "User card type 1",
+                    subtitle = "a subtitle here",
+                    elevation = 4,
+                    "Any content here"
+                )
+            )
             )
         
     )

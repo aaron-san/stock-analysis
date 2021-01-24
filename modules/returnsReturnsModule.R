@@ -4,7 +4,7 @@
 
 
 
-returnsReturnsModuleUI <- function(id) {
+returnsReturnsUI <- function(id) {
     ns <- NS(id)
     
     tagList(
@@ -30,7 +30,7 @@ returnsReturnsModuleUI <- function(id) {
                     shinyWidgets::radioGroupButtons(
                         width = 330,
                         ns("date_lookback"),
-                        "",
+                        label = "Period:",
                         choices = c("All", "10 yrs", "5 yrs", "1 yr", "3 mon"),
                         selected = "All"
                     )
@@ -57,10 +57,10 @@ returnsReturnsModuleUI <- function(id) {
 }
 
 
-returnsReturnsModule <- function(input, output, session) {
-    monthly_rets <- readRDS("data/monthly_rets_tbl.rds")
-    ticker_choices <- colnames(monthly_rets)[-1]
-    
+returnsReturnsServer <- function(input, output, session, 
+                                 monthly_rets, ticker_choices) {
+        
+    # ns <- session$ns
     updatePickerInput(session,
                       "tickers",
                       choices = ticker_choices,
@@ -126,5 +126,4 @@ returnsReturnsModule <- function(input, output, session) {
         ggplotly(returns_plot) %>%
             config(displayModeBar = FALSE)
     })
-}
-
+    }

@@ -18,71 +18,31 @@ library(sever)
 
 monthly_rets <- readRDS("data/monthly_rets_tbl.rds")
 ticker_choices <- colnames(monthly_rets)[-1]
-cash_returns <- read_rds("data/cash_returns.rds")
-asset_returns <- read_rds("data/asset_returns.rds")
+cash_rets <- read_rds("data/cash_returns.rds")
+asset_rets <- read_rds("data/asset_returns.rds")
 
 
-# Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
 
-    # sever()
+
+    callModule(returnsReturnsServer, 
+               "returns", 
+               monthly_rets = monthly_rets, 
+               ticker_choices = ticker_choices)
     
-    updatePickerInput(session, "tickers", choices = ticker_choices, selected = ticker_choices)
-    updateSelectInput(session, "ticker_decision_rule", choices = ticker_choices)
-    updateSelectInput(session, "invested_ticker", choices = ticker_choices)
-    updateSliderInput(session, "daterange_bt", min = monthly_rets %>% pull(date) %>% min(),
-                      max = monthly_rets %>% pull(date) %>% max(),
-                      value = c(as.Date("2014-01-01"), monthly_rets %>% pull(date) %>% max()))
+    callModule(backtestBacktestServer,
+               "backtest",
+               asset_rets = asset_rets,
+               cash_rets = cash_rets,
+               monthly_rets = monthly_rets,
+               ticker_choices = ticker_choices)
     
+    callModule(returnsReturnsTableServer, 
+               "returns_table",
+               monthly_rets = monthly_rets, 
+               ticker_choices = ticker_choices)
     
-    min_date <- reactive({
-        switch(input$date_lookback,
-               `All` = min(monthly_rets$date),
-               `10 yrs` = max(monthly_rets$date) %m-% years(10),
-               `5 yrs` = max(monthly_rets$date) %m-% years(5),
-               `1 yr` = max(monthly_rets$date) %m-% years(1),
-               `3 mon` = as.Date(max(monthly_rets$date)) %m-% months(3))
-    })
-    
-    ###
-    callModule(returnsReturnsModule, "returns")
-    ###
-    
-    output$returns_table = DT::renderDataTable({
-        datatable(
-            monthly_rets %>%
-                filter(date >= min_date()
-                    # date >= min(input$daterange) &
-                    #     date <= max(input$daterange)
-                ) %>%
-                select(date, input$tickers) %>%
-                mutate(across(
-                    -date,
-                    ~ scales::percent_format(accuracy = 0.1)(.x)
-                )),
-            rownames = F,
-            extensions = c("Buttons"),
-            escape = F,
-            options = list(
-                scrollX = T,
-                pageLength = 5,
-                dom = "Bfrtip",
-                buttons = c("copy", "csv", "excel"),
-                autoWidth = T,
-                columnDefs = list(list(
-                    width = '350px', targets = 6
-                ))
-            )
-        )
-    })
-    
-    ###
-    callModule(backtestBacktestModule, "backtest")
-    ###
-    
-    
-    
-    })
+})
     
 
 

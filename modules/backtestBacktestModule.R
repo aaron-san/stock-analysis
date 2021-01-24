@@ -3,7 +3,7 @@
 
 # backtestBacktestModule
 
-backtestBacktestModuleUI <- function(id) {
+backtestBacktestUI <- function(id) {
     ns <- NS(id)
     
     tagList(
@@ -74,8 +74,8 @@ backtestBacktestModuleUI <- function(id) {
                     min = as.Date("2019-12-31"),
                     max = as.Date("2020-12-31"),
                     value = as.Date(c("2019-12-31", "2020-12-31")),
-                    timeFormat = "%b %Y",
-                    animate = animationOptions(interval = 500)#,
+                    timeFormat = "%b %Y"#,
+                    # animate = animationOptions(interval = 500)#,
                     # width = 400
                 )
             ),
@@ -98,10 +98,9 @@ backtestBacktestModuleUI <- function(id) {
 }
 
 
-backtestBacktestModule <- function(input, output, session) {
-    
-    asset_returns <- read_rds("data/asset_returns.rds")
-    cash_returns <- read_rds("data/cash_returns.rds")
+backtestBacktestServer <- function(input, output, session, 
+                                   asset_rets, cash_rets,
+                                   monthly_rets, ticker_choices) {
     
     updateSelectInput(session, "ticker_decision_rule", choices = ticker_choices)
     updateSelectInput(session, "invested_ticker", choices = ticker_choices)
@@ -126,12 +125,13 @@ backtestBacktestModule <- function(input, output, session) {
     
     
     output$backtest_plot <- renderPlot({
+        
         # Step 2: Create your indicator
         validate(need(isolate(input$signal_rule), "Enter signal rule."))
         
         asset_returns_filt <- reactive({
-            asset_returns[paste(isolate(input$daterange_bt), collapse = "::")]
-            # asset_returns[paste(c("2001-12-13", "2003-12-31"), collapse = "::")]
+            asset_rets[paste(isolate(input$daterange_bt), collapse = "::")]
+            # asset_rets[paste(c("2001-12-13", "2003-12-31"), collapse = "::")]
             
         })
         
@@ -170,7 +170,7 @@ backtestBacktestModule <- function(input, output, session) {
         
         # Signals are generated the monthly before performance is earned
         strat_returns <-
-            (merge(invested_asset_returns(), cash_returns) * stats::lag(wts) - 0.0005) %>%
+            (merge(invested_asset_returns(), cash_rets) * stats::lag(wts) - 0.0005) %>%
             rowSums() %>%
             xts(order.by = index(wts)) %>%
             na.omit()
