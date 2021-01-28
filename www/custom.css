@@ -1,8 +1,11 @@
 body {
-  font-family: "Times New Roman", Times, serif;
-  margin: 12.2px;
-  color: black;
-  margin: 1px;
+  font-family: Verdana, sans-serif;
+  color: darkslategray;
+  /*margin: 1px;  122px * .1; */
+}
+
+p {
+  margin: 0;
 }
 
 /*
@@ -11,17 +14,17 @@ body {
 	background-color: $primary-color;
 }
 */
-.row {
-  vertical-align: bottom;
-}
-
 .navbar-primary {
   background-color: darkgray;
 }
 
-span {
+.shiny-input-container {
+  margin: 0 5px;
+}
+
+.card-body {
   vertical-align: bottom;
-  margin: 0 7px;
+  /*margin: 0 7px; */
 }
 
 .btn-primary {
@@ -34,8 +37,8 @@ div {
   /*padding: 5px;
 } 
 */
-span > div[class=".form-group"] {
-  vertical-align: middle;
+div[class="row"] span[button] {
+  align-self: flex-end;
 }
 
 .awesome-checkbox .checkbox-primary {
@@ -45,7 +48,7 @@ span > div[class=".form-group"] {
 
 .row {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: flex-start;
 }
 
@@ -84,7 +87,7 @@ span > div[class=".form-group"] {
 
 .btn-primary {
   color: #2b2b2b;
-  margin: 0;
+  /*margin: 0; */
   background-color: aquamarine;
   border: 1px solid darkgray;
   /*border-color: aquamarine;*/
@@ -102,32 +105,10 @@ span > div[class=".form-group"] {
   border-radius: 0.3rem;
 }
 
-.navbar-nav > p {
-  margin: 0;
-}
-
-/*
-.col, 
-[class*="col-sm-"] {
-    padding: 1 2;
-    margin: 0;
-}
-*/
-.col-sm-3, .col-sm-6 {
-  float: none;
-  margin: 0 auto;
-  padding-bottom: 1;
-}
-
 .navbar-primary {
   background-color: aquamarine;
 }
 
-/*
-ul > li.nav-item {
-    background-color: pink;
-}
-*/
 .nav-pills.nav-link.active,
 .nav-pills.show > .nav-link {
   color: #fff;
@@ -142,6 +123,15 @@ ul > li.nav-item {
   margin-bottom: 0;
 }
 
+/* ------- */
+/* Buttons */
+/* ------- */
+button {
+  align-self: flex-end;
+  /* aligns buttons to bottom of container */
+  justify-content: flex-start;
+}
+
 .btn-light {
   color: #2b2b2b;
   background-color: moccasin;
@@ -153,13 +143,13 @@ ul > li.nav-item {
   background-color: darksalmon;
 }
 
-.bootstrap-select > .dropdown-toggle.bs-placeholder, .bootstrap-select > .dropdown-toggle.bs-placeholder:active, .bootstrap-select > .dropdown-toggle.bs-placeholder:hover {
-  color: #2b2b2b;
-}
-
 btn-light:not(:disabled):not(.disabled):active,
 .btn-light.active:not(:disabled):not(.disabled),
 .show > .btn-light.dropdown-toggle {
   background-color: darksalmon;
+  color: #2b2b2b;
+}
+
+.bootstrap-select > .dropdown-toggle.bs-placeholder, .bootstrap-select > .dropdown-toggle.bs-placeholder:active, .bootstrap-select > .dropdown-toggle.bs-placeholder:hover {
   color: #2b2b2b;
 }
