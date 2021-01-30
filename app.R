@@ -1,5 +1,33 @@
 
 
+# theme_pander() +
+    # scale_fill_pander()
+
+
+
+# htmlOutput("gun.map")
+# 
+# output$gun.map = renderGvis({
+#     dash.data = dashdata.df()
+#     
+#     # Produces the gvis output, using the counted incidents
+#     gvisGeoChart(
+#         dash.data,
+#         locationvar = "state",
+#         colorvar = "Incidents",
+#         options = list(
+#             region = "US",
+#             displayMode = "auto",
+#             resolution = "provinces",
+#             datalessRegionColor = "grey"
+#         )
+#     )
+#     
+# })
+
+
+
+
 # Debugging
 # library(shinyobjects)
 # load_reactive_objects()
@@ -32,32 +60,27 @@ library(tidyverse)
 library(quantmod)
 library(PerformanceAnalytics)
 library(lubridate)
+library(highcharter)
+library(ggthemes)
+# library(tidyquant)
+# library(timetk)
 # library(ggrepel)
 # library(shinycssloaders)
 # library(sever) # Disconnection message
-# library(bootstraplib) # for using bootstrap css variables in Shiny
 
-source("modules/returnsReturnsModule.R")
-source("modules/backtestBacktestModule.R")
-source("modules/returnsReturnsTableModule.R")
-source("modules/dashboardAboutModule.R")
+# Source all modules
+lapply(list.files("modules", pattern = ".R", full.names = TRUE), FUN = function(x) source(x))
 
-
+# Load data
 monthly_rets <- read_rds("data/monthly_rets_tbl.rds")
 ticker_choices <- colnames(monthly_rets)[-1]
 cash_rets <- read_rds("data/cash_returns.rds")
 asset_rets <- read_rds("data/asset_returns.rds")
 
-
-
-
-
 # Convert Sass to CSS
 sass(sass_file("www/custom.scss"),
      output = "www/custom.css",
      cache = FALSE)
-
-# bs4DashGallery()
 
 
 ###########
@@ -69,7 +92,6 @@ ui <- bs4DashPage(
     controlbar_collapsed = TRUE,
     
     
-    
     navbar = bs4DashNavbar(
         skin = "light",
         status = "white",
@@ -78,7 +100,7 @@ ui <- bs4DashPage(
         rightUi = screenshotButton(selector = ".content", label = "Take a Screenshot"),
         fixed = TRUE,
         compact = TRUE,
-        p("Hi!")
+        p("Tools for investing!")
     ),
     
     sidebar = bs4DashSidebar(
@@ -90,12 +112,11 @@ ui <- bs4DashPage(
         brandColor = "teal",
         # NULL
         url = "https://www.linkedin.com/in/aaron-hardy-651b2410/",
-        src = "https://media-exp1.licdn.com/dms/image/C5603AQFS5xs6nUSEKg/profile-displayphoto-shrink_400_400/0/1517740988201?e=1616630400&v=beta&t=D3AghKSecL_waNSvQqdCyjTEKoDuMQZK16HRnUoQzro",
+        src = "https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ",
         expand_on_hover = TRUE,
         elevation = 4,
         opacity = 0.8,
         
-        # Sidebar menu
         bs4SidebarMenu(
             id = "sidebarmenu",
             flat = FALSE,
@@ -110,19 +131,23 @@ ui <- bs4DashPage(
             
             bs4SidebarMenuItem('Backtest',
                                tabName = "Backtest",
-                               icon = "sliders-h")
+                               icon = "sliders-h"),
+            bs4SidebarMenuItem('Research',
+                               tabName = "Research",
+                               icon = "lightbulb") #wrench, lock (ionicon.com)
         )
         
     ),
     
     controlbar = bs4DashControlbar(skin = "dark"),
-    footer = bs4DashFooter(),
+    footer = bs4DashFooter(
+        copyrights = a(href = "https://www.investwithr.com", target = "https://www.investwithr.com",
+                       "Invest with R"),
+        right_text = format(Sys.Date(), "%Y")
+    ),
     # title = "test",
     
     
-    
-    
-    # Body
     body = bs4DashBody(
         # Add custom css style
         tags$head(
@@ -132,104 +157,81 @@ ui <- bs4DashPage(
         bs4TabItems(
             bs4TabItem(tabName = "Dashboard",
                        
-                       dashboardAboutUI("dashboard_about")),
+                       mod_dashboard_about_ui("dashboard_about")),
             
             
             bs4TabItem(
                 tabName = "Returns",
                 
                 bs4TabSetPanel(
-                    id = "tabsetpanel1",
+                    id = "returns",
                     side = "left",
-                    
                     bs4TabPanel(
                         tabName = "Returns",
                         br(),
-                        
-                        bs4Card(
-                            width = 12,
-                            title = "Tickers",
-                            status = "morning",
-                            solidHeader = T,
-                            labelText = 1,
-                            dropdownIcon = "wrench",
-                            labelStatus = "danger",
-                            labelTooltip = "Hi bro",
-                            dropdownMenu = dropdownItemList(
-                                dropdownItem(url = "", name = "google link"),
-                                dropdownItem(url = "", name = "item2"),
-                                dropdownDivider(),
-                                dropdownItem(url = "", name = "item3")
-                            ),
-                            fluidRow(
-                                span(withTags(span(
-                                    b("Large-Mid-Small Cap equities"),
-                                    ul(li("SPY, MDY, IWM")),
-                                    b("Intl.and emerging markets"),
-                                    ul(li("EFA, EEM"))
-                                ))),
-                                span(withTags(span(
-                                    b("Bonds"),
-                                    ul(li("AGG, TIP, TLT, LQD")),
-                                    b("Commodities"),
-                                    ul(li("GSG"))
-                                ))),
-                                span(withTags(span(
-                                    b("Real Estate"),
-                                    ul(li("RWR, RWX, MBB")),
-                                    b("Cash"),
-                                    ul(li("SHV"))
-                                ))),
-                                
-                                
-                                returnsReturnsUI("returns", ticker_choices = ticker_choices)
-                            )
-                            
-                        )
+                        mod_returns_returns_ui("returns", ticker_choices = ticker_choices)
                     ),
                     
                     bs4TabPanel(
                         tabName = "Returns Table",
-                        returnsReturnsTableUI("returns_table", ticker_choices = ticker_choices)
+                        mod_returns_returns_table_ui("returns_table", ticker_choices = ticker_choices)
                     )
                 )
             ),
             bs4TabItem(
                 tabName = "Backtest",
                 bs4TabSetPanel(
-                    id = "tabsetpanel2",
+                    id = "backtest",
                     side = "left",
-                    # Filtered, Searchable Data
+                    
                     bs4TabPanel(
                         tabName = "Backtest",
                         br(),
-                        
-                        backtestBacktestUI(
+                        mod_backtest_backtest_ui(
                             "backtest",
                             ticker_choices = ticker_choices,
                             monthly_rets = monthly_rets
-                        ),
+                        )
                         
-                        bs4TabPanel(tabName = "Explanation",
-                                    bs4Card(width = 12,
-                                            p(
-                                                "Here is the explanation..."
-                                            ))),
-                        bs4TabPanel(tabName = "Ideas",
-                                    bs4Card(
-                                        width = 12,
+                    ),
+                    
+                    bs4TabPanel(
+                        tabName = "Sortino",
+                        br(),
+                        mod_backtest_sortino_ui("density")
+                    ),
+                    
+                    bs4TabPanel(tabName = "Explanation",
+                                bs4Card(width = 12,
                                         p(
-                                            span("Feb: +XLE (Energy Select ETF)"),
-                                            span("May: -XLE,"),
-                                            span("+Bonds (e.g,. TLT - 20yr Treasury ETF)"),
-                                            span("Aug: -TLT,"),
-                                            span("+TVIX"),
-                                            span("Sep: -TVIX,"),
-                                            span("+XLK (Technology Select ETF)"),
-                                            span("(Using stop-losses and take-profits (can't be 100% works)).")
-                                        )
-                                    ))
-                    )
+                                            "Here is the explanation..."
+                                        ))),
+                    bs4TabPanel(tabName = "Ideas",
+                                bs4Card(
+                                    width = 12,
+                                    p(
+                                        span("Feb: +XLE (Energy Select ETF)"),
+                                        span("May: -XLE,"),
+                                        span("+Bonds (e.g,. TLT - 20yr Treasury ETF)"),
+                                        span("Aug: -TLT,"),
+                                        span("+TVIX"),
+                                        span("Sep: -TVIX,"),
+                                        span("+XLK (Technology Select ETF)"),
+                                        span("(Using stop-losses and take-profits (can't be 100% works)).")
+                                    )
+                                ))
+                )
+            ),
+            bs4TabItem(
+                tabName = "Research",
+                bs4TabSetPanel(
+                    id = "research",
+                    side = "left",
+                    bs4TabPanel(tabName = "Models",
+                                
+                                ),
+                    bs4TabPanel(tabName = "Learning",
+                                mod_research_learning_ui("learning"))
                 )
             )
         )
@@ -242,15 +244,18 @@ ui <- bs4DashPage(
 ##############
 
 server <- function(input, output, session) {
-    returnsReturnsServer(id = "returns",
-                         monthly_rets = monthly_rets)
+    mod_returns_returns_server(id = "returns",
+                               monthly_rets = monthly_rets)
     
-    backtestBacktestServer(id = "backtest",
-                           asset_rets = asset_rets,
-                           cash_rets = cash_rets)
+    mod_backtest_backtest_server(id = "backtest",
+                                 asset_rets = asset_rets,
+                                 cash_rets = cash_rets)
     
-    returnsReturnsTableServer(id = "returns_table",
-                              monthly_rets = monthly_rets)
+    mod_returns_returns_table_server(id = "returns_table",
+                                     monthly_rets = monthly_rets)
+    
+    mod_backtest_sortino_server(id = "density",
+                                monthly_rets = monthly_rets)
     
 }
 

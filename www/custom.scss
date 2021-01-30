@@ -17,60 +17,45 @@ p {
     margin: 0;
 }
 
-
-/*
-.well {
-	
-	background-color: $primary-color;
-}
-*/
-
-
-
-
-.navbar-primary {
-	background-color: $color-two;
-}
-
-
-
-
-.shiny-input-container {
-  margin: 0 5px; 
-}
-
-.card-body {
-  vertical-align: bottom;
-  /*margin: 0 7px; */
-}
-
-
-
-.btn-primary {
-  margin: 0 0 0 1;
-}
-
-/*
-div {
-  margin: 0 0 0 5px;
-  /*padding: 5px;
-} 
-*/
-
-div[class="row"] span[button] {
-    align-self: flex-end;
-}
-
-
-.awesome-checkbox .checkbox-primary {
-  align-items: center;
-  vertical-align: middle;
-}
-
-
 .row {
     display: flex;
     align-items: flex-start;
+    justify-content: flex-start;
+}
+
+
+
+/*-----*/
+/* Nav */
+/*-----*/
+
+.navbar-primary {
+	background-color: $color-four;
+}
+
+.nav-pills .nav-link {
+  border-radius: .4rem 0 0 0;
+  border-bottom: 1px solid lightgray;
+  
+}
+
+.nav-pills.nav-link.active, 
+.nav-pills.show > .nav-link {
+    color: #fff;
+    background-color: #007bff;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 15px 4px 0 0;
+}
+
+
+/*---------*/
+/* Buttons */
+/*---------*/
+
+.btn {
+    align-self: flex-end;
     justify-content: flex-start;
 }
 
@@ -81,36 +66,11 @@ div[class="row"] span[button] {
     box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
 }
 
-
 .btn-default:hover, 
 .btn-default.active {
     background-color: $color-three;
     color: #2b2b2b;
     border: 1px solid $color-three;
-}
-
-
-
-
-.nav-pills .nav-link {
-  border-radius: .4rem 0 0 0;
-  border-bottom: 1px solid lightgray;
-  
-}
-
-.sidebar-dark-danger .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-danger .nav-sidebar>.nav-item>.nav-link.active {
-    background-color: $color-one;
-    color: black;
-}
-
-
-/* bar */
-.irs--shiny .irs-handle {
-  background-color: palegoldenrod;
-}
-
-.irs--shiny .irs-bar {
-  background: darkslategray;
 }
 
 .btn-primary {
@@ -130,38 +90,8 @@ div[class="row"] span[button] {
 }
 
 .btn {
-    border-radius: 0.3rem;    
-}
-
-
-.navbar-primary {
-	background-color: $color-four;
-}
-
-
-
-.nav-pills.nav-link.active, 
-.nav-pills.show > .nav-link {
-    color: #fff;
-    background-color: #007bff;
-    margin-right: 2px;
-    line-height: 1.42857143;
-    border: 1px solid transparent;
-    border-radius: 15px 4px 0 0;
-}
-
-.form-group  {
-    margin-bottom: 0;
-}
-
-
-/* ------- */
-/* Buttons */
-/* ------- */
-
-button {
-    align-self: flex-end; /* aligns buttons to bottom of container */
-    justify-content: flex-start;
+    border-radius: 0.3rem;
+    margin-bottom: 3px;
 }
 
 .btn-light {
@@ -183,14 +113,65 @@ btn-light:not(:disabled):not(.disabled):active,
 }
 
 
+.action-button {
+    margin: 20px 8px; /*30px;*/
+}
+
+body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
+    margin: 3px;
+}
+/*-------*/
+/* Forms */
+/*-------*/
+
+.form-control, .form-control:focus {
+    color: #22a7c5;
+    background-color: #f8f9fa;
+    border: 2px solid lightsteelblue;
+}
+
+
+
+
+
+
+.selectize-control {
+    margin-bottom: 0;
+}
 
 .bootstrap-select>.dropdown-toggle.bs-placeholder, .bootstrap-select>.dropdown-toggle.bs-placeholder:active, .bootstrap-select>.dropdown-toggle.bs-placeholder:hover {
   color: #2b2b2b;
 }
   
 
+.shiny-input-container {
+  margin: 3px 8px; 
+  align-self: flex-end;
+}
+
+
+.awesome-checkbox .checkbox-primary {
+  align-items: center;
+  vertical-align: middle;
+}
 
 
 
 
 
+
+
+.sidebar-dark-danger .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-danger .nav-sidebar>.nav-item>.nav-link.active {
+    background-color: $color-one;
+    color: black;
+}
+
+
+/* bar */
+.irs--shiny .irs-handle {
+  background-color: palegoldenrod;
+}
+
+.irs--shiny .irs-bar {
+  background: darkslategray;
+}

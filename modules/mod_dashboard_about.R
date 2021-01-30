@@ -1,8 +1,6 @@
 
-# dashboardAboutModule
 
-
-dashboardAboutUI <- function(id) {
+mod_dashboard_about_ui <- function(id) {
     
     ns <- NS(id)
     
@@ -10,7 +8,7 @@ dashboardAboutUI <- function(id) {
         
         fluidRow(
             bs4TabCard(
-                id = "tabcard",
+                id = ns("tabcard"),
                 width = 8,
                 title = "A card with tabs",
                 bs4TabPanel(tabName = "Quotes",
@@ -35,7 +33,7 @@ dashboardAboutUI <- function(id) {
             
             bs4UserCard(
                 width = 4,
-                src = "https://media-exp1.licdn.com/dms/image/C5603AQFS5xs6nUSEKg/profile-displayphoto-shrink_400_400/0/1517740988201?e=1616630400&v=beta&t=D3AghKSecL_waNSvQqdCyjTEKoDuMQZK16HRnUoQzro",
+                src = "https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ",
                 status = "info",
                 title = "App Creator",
                 subtitle = "Aaron Hardy",

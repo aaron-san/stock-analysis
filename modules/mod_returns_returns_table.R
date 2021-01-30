@@ -6,7 +6,7 @@
 
 # returnsReturnsTableModule
 
-returnsReturnsTableUI <- function(id, ticker_choices) {
+mod_returns_returns_table_ui <- function(id, ticker_choices) {
     ns <- NS(id)
     
     tagList(bs4Card(
@@ -26,7 +26,7 @@ returnsReturnsTableUI <- function(id, ticker_choices) {
                 width = 330,
                 inputId = ns("date_lookback_bt"),
                 label = "Period:",
-                choices = c("All", "10 yrs", "5 yrs", "1 yr", "3 mon"),
+                choices = c("All", "10Y", "5Y", "1Y", "3M"),
                 selected = "All"
                 
             ),
@@ -50,7 +50,7 @@ returnsReturnsTableUI <- function(id, ticker_choices) {
 }
 
 
-returnsReturnsTableServer <- function(id, monthly_rets) {
+mod_returns_returns_table_server <- function(id, monthly_rets) {
     moduleServer(id,
                  function(input,
                           output,
@@ -59,10 +59,10 @@ returnsReturnsTableServer <- function(id, monthly_rets) {
                          switch(
                              input$date_lookback_bt,
                              `All` = min(monthly_rets$date),
-                             `10 yrs` = max(monthly_rets$date) %m-% years(10),
-                             `5 yrs` = max(monthly_rets$date) %m-% years(5),
-                             `1 yr` = max(monthly_rets$date) %m-% years(1),
-                             `3 mon` = as.Date(max(monthly_rets$date)) %m-% months(3)
+                             `10Y` = max(monthly_rets$date) %m-% years(10),
+                             `5Y` = max(monthly_rets$date) %m-% years(5),
+                             `1Y` = max(monthly_rets$date) %m-% years(1),
+                             `3M` = as.Date(max(monthly_rets$date)) %m-% months(3)
                          )
                      })
                      
