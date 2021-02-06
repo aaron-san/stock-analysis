@@ -101,11 +101,7 @@ mod_dashboard_about_ui <- function(id) {
                 # status = "warning",
                 icon = icon("sliders")
             )
-        ),
-        ionicon(name = "heart"),
-        ionicon(name = "beer")
-        
-        
+        )
     )
     
     

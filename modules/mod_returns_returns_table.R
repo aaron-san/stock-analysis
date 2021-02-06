@@ -9,9 +9,9 @@
 mod_returns_returns_table_ui <- function(id, ticker_choices) {
     ns <- NS(id)
     
-    tagList(bs4Card(
+    tagList(boxPlus(
         width = 12,
-        status = "secondary",
+        # status = "secondary",
         gradientColor = ".bg-gradient-secondary",
         fluidRow(
             pickerInput(

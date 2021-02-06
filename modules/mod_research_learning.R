@@ -5,21 +5,21 @@ mod_research_learning_ui <- function(id) {
     ns <- NS(id)
     
     tagList(
-        bs4TabCard(
+        tabBox(
             id = ns("tabcard"),
             width = 8,
             title = "A card with tabs",
-            bs4TabPanel(tabName = "Quotes",
+            tabPanel(tabName = "Quotes",
                         active = TRUE,
-                        bs4Quote(HTML("I can calculate the motions of the heavenly bodies, but not the madness of the people. - <b class='quote_author'>Isaac Newton</b>"), status = "indigo"),
-                        bs4Quote(HTML("Be fearful when others are greedy and greedy when others are fearful. - <b class='quote_author'>Warren Buffett</b>"), status = "danger"),
-                        bs4Quote(HTML("Only buy something that you'd be perfectly willing to hold if the market shut down for 10 years. - <b class='quote_author'>Warren Buffett</b>"), status = "teal"),
-                        bs4Quote(HTML("Stop trying to predict the direction of the stock market, the economy, interest rates, or elections. - <b class='quote_author'>Warren Buffett</b>"), status = "orange")#,
+                     blockQuote(HTML("I can calculate the motions of the heavenly bodies, but not the madness of the people. - <b class='quote_author'>Isaac Newton</b>"), status = "indigo"),
+                     blockQuote(HTML("Be fearful when others are greedy and greedy when others are fearful. - <b class='quote_author'>Warren Buffett</b>"), status = "danger"),
+                     blockQuote(HTML("Only buy something that you'd be perfectly willing to hold if the market shut down for 10 years. - <b class='quote_author'>Warren Buffett</b>"), status = "teal"),
+                     blockQuote(HTML("Stop trying to predict the direction of the stock market, the economy, interest rates, or elections. - <b class='quote_author'>Warren Buffett</b>"), status = "orange")#,
                         # bs4Quote("Blablabla", status = "warning"),
                         # bs4Quote("Blablabla", status = "fuchsia")
                         
             ),
-            bs4TabPanel(tabName = "Data Preprocessing",
+            tabPanel(tabName = "Data Preprocessing",
                         active = FALSE,
                         
                         strong("Data preprocessing"),
@@ -34,7 +34,7 @@ mod_research_learning_ui <- function(id) {
                           HTML('<li>'), "ica - Replace with independent components", HTML('</li>')
                         )
                         ),
-            bs4TabPanel(tabName = "Tab 3",
+            tabPanel(tabName = "Tab 3",
                         active = FALSE,
                         "Content 3")
         )

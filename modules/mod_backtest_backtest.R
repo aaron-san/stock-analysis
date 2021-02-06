@@ -3,20 +3,20 @@
 
 
 
+
 mod_backtest_backtest_ui <-
     function(id, ticker_choices, monthly_rets) {
         ns <- NS(id)
         
         tagList(fluidRow(
-            bs4Card(
-                width = 12,
-                title = "Decision Rules",
-                status = "secondary",
-                fluidRow(
-                    width = 12,
-                    title = "Test a Decision Rule",
-                    status = "primary",
-                    solidHeader = T,
+            # width = 12,
+            boxPlus(title = "Decision Rules",
+                    # status = "secondary",
+                    # fluidRow(
+                    # width = 12,
+                    # title = "Test a Decision Rule",
+                    # status = "primary",
+                    # solidHeader = T,
                     wellPanel(
                         p(
                             "Here you can explore custom decision rules directly below. Simply
@@ -31,80 +31,76 @@ mod_backtest_backtest_ui <-
                             )
                         ))
                     )
-                )
-            ), 
-            # 2nd row
-            bs4Card(
-                width = 6,
-                title = "Inputs",
-                status = "secondary",
-                solidHeader = FALSE,
-                class = "input_card",
-                fluidRow(id = "decision_rule_input",
-                    selectInput(
-                        width = 200,
-                        inputId = ns("ticker_decision_rule"),
-                        label = "Ticker used in decision rule (x)",
-                        selected = "EEM",
-                        choices = ticker_choices
-                        
                     ),
                     
-                    selectInput(
-                        width = 200,
-                        inputId = ns("invested_ticker"),
-                        label = "Ticker to invest in if rule is triggered",
-                        selected = "EEM",
-                        choices = ticker_choices
-                        
-                    ),
-                
-                    textInput(
-                        width = 400,
-                        # id = "signal_rule",
-                        inputId = ns("signal_rule"),
-                        "Enter a decision rule:",
-                        value = "if_else(x < 0, 1, 0)"
-                    # )
-                    
-                    
-                ),
-                # br(),
-                # fluidRow(id = "decision_rule_input",
-                    sliderInput(
-                        width = 400,
-                        inputId = ns("daterange_bt"),
-                        "Select a Date Range",
-                        min = monthly_rets %>% pull(date) %>% min(),
-                        max = monthly_rets %>% pull(date) %>% max(),
-                        value = c(
-                            as.Date("2014-01-01"),
-                            monthly_rets %>% pull(date) %>% max()
+                    boxPlus(
+                        # width = 6,
+                        title = "Inputs",
+                        # status = "secondary",
+                        solidHeader = FALSE,
+                        class = "input_card",
+                        # fluidRow(id = "decision_rule_input",
+                        selectInput(
+                            width = 200,
+                            inputId = ns("ticker_decision_rule"),
+                            label = "Ticker used in decision rule (x)",
+                            selected = "EEM",
+                            choices = ticker_choices
+                            
                         ),
-                        timeFormat = "%b %Y"#,
-                        # animate = animationOptions(interval = 500)#,
-                        # width = 400
                         
-                    ),
-                    span(),
-                    actionButton(
-                        width = 70,
-                        inputId = ns("bt_button"),
-                        "Plot",
-                        icon("caret-right"),
-                        class = "btn-primary"
+                        selectInput(
+                            width = 200,
+                            inputId = ns("invested_ticker"),
+                            label = "Ticker to invest in if rule is triggered",
+                            selected = "EEM",
+                            choices = ticker_choices
+                            
+                        ),
+                        
+                        textInput(
+                            width = 400,
+                            # id = "signal_rule",
+                            inputId = ns("signal_rule"),
+                            "Enter a decision rule:",
+                            value = "if_else(x < 0, 1, 0)"
+                            # )
+                            
+                            
+                        ),
+                        # br(),
+                        # fluidRow(id = "decision_rule_input",
+                        sliderInput(
+                            width = 400,
+                            inputId = ns("daterange_bt"),
+                            "Select a Date Range",
+                            min = monthly_rets %>% pull(date) %>% min(),
+                            max = monthly_rets %>% pull(date) %>% max(),
+                            value = c(
+                                as.Date("2014-01-01"),
+                                monthly_rets %>% pull(date) %>% max()
+                            ),
+                            timeFormat = "%b %Y"#,
+                            # animate = animationOptions(interval = 500)#,
+                            # width = 400
+                            
+                        ),
+                        span(),
+                        actionButton(
+                            width = 70,
+                            inputId = ns("bt_button"),
+                            "Plot",
+                            icon("caret-right"),
+                            class = "btn-primary"
+                        )
                     )
-                )
             ),
-            bs4Card(
-                width = 6,
+            fluidRow(boxPlus(# width = 8,
                 title = "Backtest Plot",
-                status = "secondary",
-                fluidRow(plotOutput(ns(
-                    "backtest_plot"
-                )))
-            )
-        ))
+                # status = "secondary",
+                plotOutput(
+                    ns("backtest_plot")
+                ))))
     }
 
 
@@ -186,7 +182,16 @@ mod_backtest_backtest_server <-
                              # Step 4: Evaluate strategy performance
                              # table.DownsideRisk(rets)
                              # table.Stats(rets)
-                             charts.PerformanceSummary(rets, wealth.index = TRUE)
+                             charts.PerformanceSummary(
+                                 rets,
+                                 wealth.index = TRUE,
+                                 theme = chartTheme(
+                                     bg.col = "grey96",
+                                     fg.col = "grey70",
+                                     grid.col = "white",
+                                     border = "transparent"
+                                 )
+                             )
                              # chart.RelativePerformance(rets[ , 2], rets[ ,1])
                              # chart.RiskReturnScatter(rets)
                              

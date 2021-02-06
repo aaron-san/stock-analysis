@@ -47,7 +47,7 @@
 # convert_selection()
 
 library(shiny)
-# library(shinydashboard)
+library(shinydashboard)
 library(shinydashboardPlus)
 # library(bs4Dash)
 library(shinyjs)
@@ -118,7 +118,7 @@ ui <- dashboardPagePlus(
     # ),
     
     sidebar = dashboardSidebar(
-        sidebarUserPanel(
+      sidebarUserPanel(
             "Aaron Hardy",
             subtitle = a(href = "#", icon("circle", class = "text-success"), "Online"),
             # Image file should be in www/ subdir
@@ -164,14 +164,11 @@ ui <- dashboardPagePlus(
         )
     ),
     
-    
   
     # url = "https://www.linkedin.com/in/aaron-hardy-651b2410/",
     # src = "https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ",
     
     
-
-
     # controlbar = bs4DashControlbar(skin = "dark"),
     footer = dashboardFooter(
         left_text = "By Aaron Hardy",
@@ -179,32 +176,27 @@ ui <- dashboardPagePlus(
         # copyrights = a(href = "https://www.investwithr.com", target = "https://www.investwithr.com",
         #                "Invest with R"),
     ),
-    
-    
     body = dashboardBody(
         # Add custom css style
         tags$head(
             tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
         ),
-        
-        setShadow(class = "dropdown-menu"),
-        
+        # setShadow(class = "dropdown-menu"),
         tabItems(
             tabItem(tabName = "dashboard",
-                    
-                    mod_dashboard_about_ui("dashboard_about")),
+                    mod_dashboard_about_ui("dashboard_about")
+                    ),
             tabItem(
                 tabName = "returns",
                 tabsetPanel(
-                    id = "returns",
-                    side = "left",
+                    id = "Returns",
                     tabPanel(
-                        tabName = "Returns",
+                        title = "returns",
                         br(),
                         mod_returns_returns_ui("returns", ticker_choices = ticker_choices)
                     ),
                     tabPanel(
-                        tabName = "Returns Table",
+                        title = "Returns Table",
                         mod_returns_returns_table_ui("returns_table", ticker_choices = ticker_choices)
                     )
                 )
@@ -213,10 +205,8 @@ ui <- dashboardPagePlus(
                 tabName = "Backtest",
                 tabsetPanel(
                     id = "backtest",
-                    side = "left",
-                    
                     tabPanel(
-                        tabName = "Backtest",
+                        title = "Backtest",
                         br(),
                         mod_backtest_backtest_ui(
                             "backtest",
@@ -225,17 +215,21 @@ ui <- dashboardPagePlus(
                         )
                         
                     ),
-                    tabPanel(tabName = "Sortino",
+                    tabPanel(
+                      title = "Sortino",
                              br(),
                              mod_backtest_sortino_ui("density")),
-                    tabPanel(tabName = "Explanation",
+                    tabPanel(
+                      title = "Explanation",
                                 boxPlus(width = 12,
                                         p(
                                             "Here is the explanation..."
                                         ))),
-                    tabPanel(tabName = "Ideas",
+                    tabPanel(
+                      title = "Ideas",
                          boxPlus(
-                             width = 12,
+                           title = "trading idea",  
+                           width = 12,
                              p(
                                  span("Feb: +XLE (Energy Select ETF)"),
                                  span("May: -XLE,"),
@@ -245,7 +239,24 @@ ui <- dashboardPagePlus(
                                  span("Sep: -TVIX,"),
                                  span("+XLK (Technology Select ETF)"),
                                  span("(Using stop-losses and take-profits (can't be 100% works)).")
-                             )
+                             ),
+                             footer = "footer",
+                             collapsible = TRUE,
+                             solidHeader = FALSE,
+
+                             enable_label = TRUE,
+                             label_text = "label text",
+                             label_status = "primary",
+                             enable_dropdown = TRUE,
+                             dropdown_icon = "wrench",
+                             dropdown_menu = NULL,
+                             enable_sidebar = TRUE,
+                             sidebar_content = NULL,
+                             sidebar_title = "sidebar title",
+                             sidebar_width = 25,
+                             sidebar_background = "#222d32",
+
+                             sidebar_icon = "cogs"
                          ))
                     
                 )
@@ -254,12 +265,16 @@ ui <- dashboardPagePlus(
                 tabName = "Research",
                 tabsetPanel(
                     id = "research",
-                    side = "left",
-                    tabPanel(tabName = "Models",
+                    # side = "left",
+                    tabPanel(
+                      # title = "Models",
+                      title = "Models"
 
                                 ),
-                    tabPanel(tabName = "Learning",
-                                mod_research_learning_ui("learning"))
+                    tabPanel(
+                      # tabName = "Learning",
+                      title = "Learning",
+                      mod_research_learning_ui("learning"))
                 )
             )
         )

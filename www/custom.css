@@ -13,9 +13,15 @@ p {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
+  margin-right: 0;
+  margin-left: 0;
 }
 
-/*-----*/
+.row > span {
+  margin-right: 15px;
+}
+
+/*-----
 /* Nav */
 /*-----*/
 .navbar-primary {
@@ -50,6 +56,7 @@ p {
   border: 1px solid darkgray;
   color: #444;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.125), 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: background .2s ease-in-out;
 }
 
 .btn-default:hover,
@@ -175,6 +182,10 @@ body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
     color: white;
 }
 */
+.direct-chat .box-body {
+  padding: 10px;
+}
+
 /*
 .row {
     background-color: #272b30;
@@ -191,9 +202,9 @@ body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
 }
 */
 .input_card {
-  background-color: #272b30;
+  /*background-color: #272b30;*/
   border-radius: 0 0 0.3rem 0.3rem;
-  color: white;
+  /*color: white;*/
 }
 
 .bootstrap-select.form-control {

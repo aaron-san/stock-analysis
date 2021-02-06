@@ -4,16 +4,16 @@ mod_backtest_sortino_ui <- function(id) {
     
     tagList(
         fluidRow(
-            bs4Card(
-                width = 6,
+            boxPlus(
+                # width = 6,
                 title = "Density Plot",
-                status = "secondary",
+                # status = "secondary",
                 plotOutput(ns("density_plot"), height = "200px")
             ),
-            bs4Card(
-                width = 6,
+            boxPlus(
+                # width = 6,
                 title = "Sortino Plot",
-                status = "secondary",
+                # status = "secondary",
                 plotOutput(ns("perf_chart"), height = "200px")
                 )
         )

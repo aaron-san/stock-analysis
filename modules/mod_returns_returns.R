@@ -18,7 +18,8 @@ mod_returns_returns_ui <- function(id, ticker_choices) {
     ns <- NS(id)
     
     tagList(
-            boxPlus(
+        fluidRow(    
+        boxPlus(
             width = 12,
             title = "Tickers",
             # status = "morning",
@@ -33,28 +34,25 @@ mod_returns_returns_ui <- function(id, ticker_choices) {
             #     dropdownDivider(),
             #     dropdownItem(url = "", name = "item3")
             # ),
-            fluidRow(span(withTags(
-                span(
-                    b("Large-Mid-Small Cap equities"),
-                    ul(li("SPY, MDY, IWM")),
-                    b("Intl.and emerging markets"),
-                    ul(li("EFA, EEM"))
-                )
-            )),
-            span(withTags(
-                span(b("Bonds"),
-                     ul(li(
-                         "AGG, TIP, TLT, LQD"
-                     )),
-                     b("Commodities"),
-                     ul(li("GSG")))
-            )),
+            fluidRow(span(withTags(span(
+                b("Large-Mid-Small Cap equities"),
+                ul(li("SPY, MDY, IWM")),
+                b("Intl.and emerging markets"),
+                ul(li("EFA, EEM"))
+            ))),
+            span(withTags(span(
+                b("Bonds"),
+                ul(li("AGG, TIP, TLT, LQD")),
+                b("Commodities"),
+                ul(li("GSG"))
+            ))), 
             span(withTags(
                 span(b("Real Estate"),
                      ul(li("RWR, RWX, MBB")),
                      b("Cash"),
                      ul(li("SHV")))
             )))
+        )
         ),
         fluidRow(
             boxPlus(
