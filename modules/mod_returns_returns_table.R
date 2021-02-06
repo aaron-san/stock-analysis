@@ -11,6 +11,8 @@ mod_returns_returns_table_ui <- function(id, ticker_choices) {
     
     tagList(bs4Card(
         width = 12,
+        status = "secondary",
+        gradientColor = ".bg-gradient-secondary",
         fluidRow(
             pickerInput(
                 width = 300,

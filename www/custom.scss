@@ -4,12 +4,14 @@ $color-one: moccasin;
 $color-two: darkgray;
 $color-three: darksalmon;
 $color-four: aquamarine;
+$color-five: #343a40; /*dark gray shade*/
+
 
 
 
 body { 
 	font-family: $font-stack;
-	color: darkslategray;
+	color: $color-five;
     /*margin: 1px;  122px * .1; */
 }
 
@@ -102,13 +104,13 @@ p {
 }
 
 .btn-light:hover {
-  background-color: darksalmon;
+  background-color: $color-three;
 }
 
 btn-light:not(:disabled):not(.disabled):active, 
 .btn-light:not(:disabled):not(.disabled).active, 
 .show>.btn-light.dropdown-toggle {
-  background-color: darksalmon;
+  background-color: $color-three;
   color: #2b2b2b;  
 }
 
@@ -125,13 +127,15 @@ body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
 /*-------*/
 
 .form-control, .form-control:focus {
-    color: #22a7c5;
+    /*color: #22a7c5;*/
     background-color: #f8f9fa;
-    border: 2px solid lightsteelblue;
+    /*border: 2px solid lightsteelblue;*/
 }
 
 
-
+.navbar-test {
+    color: $color-five;   
+}
 
 
 
@@ -157,21 +161,82 @@ body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
 
 
 
+.nav-pills .nav-link {
+    color: $color-two;
+    /*background-color: $color-two;*/
+}
 
 
 
 
 .sidebar-dark-danger .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-danger .nav-sidebar>.nav-item>.nav-link.active {
     background-color: $color-one;
-    color: black;
+    color: $color-five;
 }
 
 
 /* bar */
+.irs--shiny .irs-grid-text,
+.irs--shiny .irs-min, .irs--shiny .irs-max {
+    color: white;
+}
+
+
+
+
+/*
 .irs--shiny .irs-handle {
   background-color: palegoldenrod;
 }
 
 .irs--shiny .irs-bar {
-  background: darkslategray;
+  background: $color-five;
+}
+*/
+
+
+#decision_rule_input {
+    background: $color-five;
+    padding: 10px;
+    border-radius: 0.3rem;
+    color: white;
+}
+/*
+#backtest-signal_rule-label {
+    color: white;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+/*
+.row {
+    background-color: #272b30;
+}
+
+.box-body {
+  color: #f7f6f6;
+  background-color: #1c1e22;
+}
+
+
+.content-wrapper {
+    background-color: #1c1e22;
+}
+*/
+.input_card {
+    background-color: #272b30;
+    border-radius: 0 0 0.3rem 0.3rem;
+    color: white;
+}
+
+.bootstrap-select.form-control {
+    margin: 0;
 }

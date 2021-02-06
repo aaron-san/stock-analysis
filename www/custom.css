@@ -1,6 +1,7 @@
+/*dark gray shade*/
 body {
   font-family: Verdana, sans-serif;
-  color: darkslategray;
+  color: #343a40;
   /*margin: 1px;  122px * .1; */
 }
 
@@ -110,9 +111,13 @@ body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
 /* Forms */
 /*-------*/
 .form-control, .form-control:focus {
-  color: #22a7c5;
+  /*color: #22a7c5;*/
   background-color: #f8f9fa;
-  border: 2px solid lightsteelblue;
+  /*border: 2px solid lightsteelblue;*/
+}
+
+.navbar-test {
+  color: #343a40;
 }
 
 .selectize-control {
@@ -133,16 +138,64 @@ body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
   vertical-align: middle;
 }
 
+.nav-pills .nav-link {
+  color: darkgray;
+  /*background-color: $color-two;*/
+}
+
 .sidebar-dark-danger .nav-sidebar > .nav-item > .nav-link.active, .sidebar-light-danger .nav-sidebar > .nav-item > .nav-link.active {
   background-color: moccasin;
-  color: black;
+  color: #343a40;
 }
 
 /* bar */
+.irs--shiny .irs-grid-text,
+.irs--shiny .irs-min, .irs--shiny .irs-max {
+  color: white;
+}
+
+/*
 .irs--shiny .irs-handle {
   background-color: palegoldenrod;
 }
 
 .irs--shiny .irs-bar {
-  background: darkslategray;
+  background: $color-five;
+}
+*/
+#decision_rule_input {
+  background: #343a40;
+  padding: 10px;
+  border-radius: 0.3rem;
+  color: white;
+}
+
+/*
+#backtest-signal_rule-label {
+    color: white;
+}
+*/
+/*
+.row {
+    background-color: #272b30;
+}
+
+.box-body {
+  color: #f7f6f6;
+  background-color: #1c1e22;
+}
+
+
+.content-wrapper {
+    background-color: #1c1e22;
+}
+*/
+.input_card {
+  background-color: #272b30;
+  border-radius: 0 0 0.3rem 0.3rem;
+  color: white;
+}
+
+.bootstrap-select.form-control {
+  margin: 0;
 }

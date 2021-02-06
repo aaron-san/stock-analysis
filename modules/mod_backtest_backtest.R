@@ -1,13 +1,17 @@
 
 
 
+
+
 mod_backtest_backtest_ui <-
     function(id, ticker_choices, monthly_rets) {
         ns <- NS(id)
         
-        tagList(
+        tagList(fluidRow(
             bs4Card(
                 width = 12,
+                title = "Decision Rules",
+                status = "secondary",
                 fluidRow(
                     width = 12,
                     title = "Test a Decision Rule",
@@ -18,21 +22,25 @@ mod_backtest_backtest_ui <-
                             "Here you can explore custom decision rules directly below. Simply
                                      enter the condition in a format similar to these:"
                         ),
-                        p("if_else(x < 0, 1, 0)"),
-                        p("if_else(SMA(x, 3) > SMA(x, 6), 1, 0)"),
-                        p(tags$b("if_else(x < -0.2, 1, 0)")),
-                        p(
-                            "if_else(SMA(x, 3) > 0.01 & stats::lag(x, 1) > 0 & runSD(x, 3) < 0.1, 1, 0)"
-                        )
+                        withTags(ul(
+                            li("if_else(x < 0, 1, 0)"),
+                            li("if_else(SMA(x, 3) > SMA(x, 6), 1, 0)"),
+                            li(strong("if_else(x < -0.2, 1, 0)")),
+                            li(
+                                "if_else(SMA(x, 3) > 0.01 & stats::lag(x, 1) > 0 & runSD(x, 3) < 0.1, 1, 0)"
+                            )
+                        ))
                     )
                 )
-            ),
+            ), 
             # 2nd row
             bs4Card(
-                width = 12,
-                title = "Decision Rule",
-                solidHeader = T,
-                fluidRow(
+                width = 6,
+                title = "Inputs",
+                status = "secondary",
+                solidHeader = FALSE,
+                class = "input_card",
+                fluidRow(id = "decision_rule_input",
                     selectInput(
                         width = 200,
                         inputId = ns("ticker_decision_rule"),
@@ -50,17 +58,19 @@ mod_backtest_backtest_ui <-
                         choices = ticker_choices
                         
                     ),
-                    
+                
                     textInput(
-                        width = 300,
+                        width = 400,
+                        # id = "signal_rule",
                         inputId = ns("signal_rule"),
                         "Enter a decision rule:",
                         value = "if_else(x < 0, 1, 0)"
-                    )
+                    # )
                     
                     
                 ),
-                fluidRow(
+                # br(),
+                # fluidRow(id = "decision_rule_input",
                     sliderInput(
                         width = 400,
                         inputId = ns("daterange_bt"),
@@ -74,9 +84,9 @@ mod_backtest_backtest_ui <-
                         timeFormat = "%b %Y"#,
                         # animate = animationOptions(interval = 500)#,
                         # width = 400
-                      
+                        
                     ),
-                    span(),  
+                    span(),
                     actionButton(
                         width = 70,
                         inputId = ns("bt_button"),
@@ -84,13 +94,17 @@ mod_backtest_backtest_ui <-
                         icon("caret-right"),
                         class = "btn-primary"
                     )
-                ),
-                fluidRow(
-                    plotOutput(ns(
+                )
+            ),
+            bs4Card(
+                width = 6,
+                title = "Backtest Plot",
+                status = "secondary",
+                fluidRow(plotOutput(ns(
                     "backtest_plot"
                 )))
             )
-        )
+        ))
     }
 
 

@@ -8,6 +8,9 @@
 
 
 
+
+
+
 # returnsReturnsModule
 
 
@@ -15,21 +18,21 @@ mod_returns_returns_ui <- function(id, ticker_choices) {
     ns <- NS(id)
     
     tagList(
-        bs4Card(
+            boxPlus(
             width = 12,
             title = "Tickers",
             # status = "morning",
-            labelText = 1,
-            status = "secondary",
-            dropdownIcon = "wrench",
-            labelStatus = "danger",
-            labelTooltip = "Hi bro",
-            dropdownMenu = dropdownItemList(
-                dropdownItem(url = "", name = "google link"),
-                dropdownItem(url = "", name = "item2"),
-                dropdownDivider(),
-                dropdownItem(url = "", name = "item3")
-            ),
+            # labelText = 1,
+            # status = "secondary",
+            # dropdownIcon = "wrench",
+            # labelStatus = "danger",
+            # labelTooltip = "Hi bro",
+            # dropdownMenu = dropdownItemList(
+            #     dropdownItem(url = "", name = "google link"),
+            #     dropdownItem(url = "", name = "item2"),
+            #     dropdownDivider(),
+            #     dropdownItem(url = "", name = "item3")
+            # ),
             fluidRow(span(withTags(
                 span(
                     b("Large-Mid-Small Cap equities"),
@@ -51,51 +54,46 @@ mod_returns_returns_ui <- function(id, ticker_choices) {
                      ul(li("RWR, RWX, MBB")),
                      b("Cash"),
                      ul(li("SHV")))
-            ))),
-            hr(),
-            fluidRow(
-                column(
-                    width = 3,
-                    # headerBorder = TRUE,
-                    h4("Choose parameters"),
-                    # status = "secondary",
-                    # solidHeader = FALSE,
-                    
-                    
-                    pickerInput(
-                        width = 240,
-                        inputId = ns("tickers"),
-                        label = "Select Tickers:",
-                        choices = ticker_choices,
-                        selected = ticker_choices[1:5],
-                        options = list(`actions-box` = TRUE),
-                        multiple = TRUE
-                    ),
-                    shinyWidgets::radioGroupButtons(
-                        width = 330,
-                        ns("date_lookback"),
-                        label = "Period:",
-                        choices = c("All", "10Y", "5Y", "1Y", "3M"),
-                        selected = "All"
-                    ),
-                    actionButton(
-                        width = 100,
-                        ns("showPlot"),
-                        "Plot",
-                        icon("caret-right"),
-                        class = "btn-primary"
-                    )
-                    
+            )))
+        ),
+        fluidRow(
+            boxPlus(
+                width = 6,
+                class = "input_card",
+                title = "Inputs",
+                # status = "secondary",
+                pickerInput(
+                    width = 240,
+                    inputId = ns("tickers"),
+                    label = "Select Tickers:",
+                    choices = ticker_choices,
+                    selected = ticker_choices[1:5],
+                    options = list(`actions-box` = TRUE),
+                    multiple = TRUE
                 ),
-                column(width = 1),
-                column(# fill = "#fdf6e3",
-                    width = 8,
-                    h4("Cumulative Returns Plot"),
-                    # headerBorder = FALSE,
+                shinyWidgets::radioGroupButtons(
+                    width = 330,
+                    ns("date_lookback"),
+                    label = "Period:",
+                    choices = c("All", "10Y", "5Y", "1Y", "3M"),
+                    selected = "All"
+                ),
+                actionButton(
+                    width = 100,
+                    ns("showPlot"),
+                    "Plot",
+                    icon("caret-right"),
+                    class = "btn-primary"
+                )
+                
+            ),
+            
+            boxPlus(
+                width = 6,
+                title = "Cumulative Returns Plot",
                     # status = "secondary",
-                    # solidHeader = T,
+                    # width = 8,
                     plotlyOutput(ns("returns_plot")))
-            )
         )
     )
 }

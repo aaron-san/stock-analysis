@@ -7,14 +7,14 @@ mod_backtest_sortino_ui <- function(id) {
             bs4Card(
                 width = 6,
                 title = "Density Plot",
-                solidHeader = T,
-                plotOutput(ns("density_plot"))
+                status = "secondary",
+                plotOutput(ns("density_plot"), height = "200px")
             ),
             bs4Card(
                 width = 6,
                 title = "Sortino Plot",
-                solidHeader = T,
-                highchartOutput(ns("perf_chart"))
+                status = "secondary",
+                plotOutput(ns("perf_chart"), height = "200px")
                 )
         )
         
@@ -45,16 +45,39 @@ mod_backtest_sortino_server <- function(id, monthly_rets) {
                          setNames(paste(rolling_window, "-month rolling sortino", sep="")) 
                      
                      
-                     output$perf_chart <- renderHighchart(
-                         highchart(type = "stock") %>%
-                         hc_title(text = names(rolling_sortino)) %>%
-                         # hc_title(text = names(rolling_sortino())) %>%
-                         # hc_add_series(rolling_sortino(), name = names(rolling_sortino()), color = "cornflowerblue") %>%
-                         hc_add_series(rolling_sortino, name = names(rolling_sortino), color = "cornflowerblue") %>%
-                             hc_add_theme(hc_theme_economist()) %>% 
-                             hc_navigator(enabled = FALSE) %>% 
-                         hc_scrollbar(enabled = FALSE) 
+                     
+                     
+                     output$perf_chart <- renderPlot(
+                         
+                         
+                         rolling_sortino %>% 
+                             as_tibble() %>% 
+                             mutate(date = index(rolling_sortino)) %>% 
+                             select(date, `24-month rolling sortino`) %>% 
+                             drop_na() %>%
+                             ggplot(aes(x = date, y = `24-month rolling sortino`, 
+                                        fill = ifelse(`24-month rolling sortino` >= 0, "green", "red"))) + 
+                             geom_col(alpha = 0.6) +
+                             geom_hline(yintercept = 0, color = "red", alpha = 0.5) +
+                             theme_minimal() + 
+                             theme(legend.position = "") + 
+                             labs(x = "",
+                                  y = "",
+                                  title = "24-month Rolling Sortino")
+                             
                      )
+                     
+                     
+                     # output$perf_chart <- renderHighchart(
+                     #     highchart(type = "stock") %>%
+                     #     hc_title(text = names(rolling_sortino)) %>%
+                     #     # hc_title(text = names(rolling_sortino())) %>%
+                     #     # hc_add_series(rolling_sortino(), name = names(rolling_sortino()), color = "cornflowerblue") %>%
+                     #     hc_add_series(rolling_sortino, name = names(rolling_sortino), color = "cornflowerblue") %>%
+                     #         hc_add_theme(hc_theme_economist()) %>% 
+                     #         hc_navigator(enabled = FALSE) %>% 
+                     #     hc_scrollbar(enabled = FALSE) 
+                     # )
                      
                      
                      port_rets_xts_rebal_monthly %>% 
@@ -89,7 +112,8 @@ mod_backtest_sortino_server <- function(id, monthly_rets) {
                          as_tibble() %>% 
                          mutate(date = index(port_rets_xts_rebal_monthly)) %>% 
                          ggplot(aes(x = portfolio.returns)) +
-                         stat_density(geom = "line", size = 1, color = "cornflowerblue") 
+                         stat_density(geom = "line", size = 1, color = "cornflowerblue") +
+                         theme_minimal()
                      
                      shaded_area_data <- ggplot_build(sortino_density_plot)$data[[1]] %>% 
                          filter(x < mar)

@@ -1,15 +1,17 @@
 
 
+
+
 # theme_pander() +
-    # scale_fill_pander()
+# scale_fill_pander()
 
 
 
 # htmlOutput("gun.map")
-# 
+#
 # output$gun.map = renderGvis({
 #     dash.data = dashdata.df()
-#     
+#
 #     # Produces the gvis output, using the counted incidents
 #     gvisGeoChart(
 #         dash.data,
@@ -22,7 +24,7 @@
 #             datalessRegionColor = "grey"
 #         )
 #     )
-#     
+#
 # })
 
 
@@ -46,7 +48,8 @@
 
 library(shiny)
 # library(shinydashboard)
-library(bs4Dash)
+library(shinydashboardPlus)
+# library(bs4Dash)
 library(shinyjs)
 library(shinyscreenshot)
 library(plotly)
@@ -69,7 +72,11 @@ library(ggthemes)
 # library(sever) # Disconnection message
 
 # Source all modules
-lapply(list.files("modules", pattern = ".R", full.names = TRUE), FUN = function(x) source(x))
+lapply(
+    list.files("modules", pattern = ".R", full.names = TRUE),
+    FUN = function(x)
+        source(x)
+)
 
 # Load data
 monthly_rets <- read_rds("data/monthly_rets_tbl.rds")
@@ -87,104 +94,128 @@ sass(sass_file("www/custom.scss"),
 ### UI ####
 ###########
 
-ui <- bs4DashPage(
-    sidebar_collapsed = TRUE,
-    controlbar_collapsed = TRUE,
+ui <- dashboardPagePlus(
+    collapse_sidebar = FALSE,
+    sidebar_fullCollapse = TRUE,
+    title = "Stock Analysis",
+    skin = c("red-light"), #"midnight", "black-light"
+    
+    # sidebar_background = NULL,
     
     
-    navbar = bs4DashNavbar(
-        skin = "light",
-        status = "white",
-        sidebarIcon = "bars",
-        # leftUi = actionButton("goButton1", "Go1"),
-        rightUi = screenshotButton(selector = ".content", label = "Take a Screenshot"),
-        fixed = TRUE,
-        compact = TRUE,
-        p("Tools for investing!")
-    ),
+    header = dashboardHeaderPlus(enable_rightsidebar = TRUE,
+                                 rightSidebarIcon = "gears"),
     
-    sidebar = bs4DashSidebar(
-        inputId = "sidebar",
-        disable = FALSE,
-        title = "Stock Analysis",
-        skin = "dark",
-        status = "danger",
-        brandColor = "teal",
-        # NULL
-        url = "https://www.linkedin.com/in/aaron-hardy-651b2410/",
-        src = "https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ",
-        expand_on_hover = TRUE,
-        elevation = 4,
-        opacity = 0.8,
-        
-        bs4SidebarMenu(
-            id = "sidebarmenu",
-            flat = FALSE,
-            compact = FALSE,
-            child_indent = TRUE,
-            bs4SidebarMenuItem('Dashboard',
-                               tabName = 'Dashboard',
-                               icon = 'dashboard'),
-            bs4SidebarMenuItem('Returns',
-                               tabName = 'Returns',
-                               icon = 'chart-line'),
-            
-            bs4SidebarMenuItem('Backtest',
+    # navbar = bs4DashNavbar(
+    #     skin = "light",
+    #     status = "white",
+    #     sidebarIcon = "bars",
+    #     # leftUi = actionButton("goButton1", "Go1"),
+    #     rightUi = screenshotButton(selector = ".content", label = "Take a Screenshot"),
+    #     fixed = TRUE,
+    #     compact = TRUE,
+    #     p("Tools for investing!", class = "navbar-text")
+    # ),
+    
+    sidebar = dashboardSidebar(
+        sidebarUserPanel(
+            "Aaron Hardy",
+            subtitle = a(href = "#", icon("circle", class = "text-success"), "Online"),
+            # Image file should be in www/ subdir
+            image = "https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ"
+        ),
+        sidebarSearchForm(label = "Enter a number", "searchText", "searchButton"),
+        sidebarMenu(
+            # Setting id makes input$tabs give the tabName of currently-selected tab
+            id = "tabs",
+            menuItem(
+                "Dashboard",
+                tabName = "dashboard",
+                icon = icon("dashboard")
+            ),
+            menuItem(
+                "Returns",
+                icon = icon("th"), # chart-line
+                tabName = "returns",
+                badgeLabel = "new",
+                badgeColor = "green"
+            ),
+            menuItem(
+                "Widgets",
+                icon = icon("th"),
+                tabName = "widgets",
+                badgeLabel = "new",
+                badgeColor = "green"
+            ),
+            menuItem(
+                "Charts",
+                icon = icon("bar-chart-o"),
+                menuSubItem("Sub-item 1", tabName = "subitem1"),
+                menuSubItem("Sub-item 2", tabName = "subitem2")
+            ),
+            menuItem('Backtest',
                                tabName = "Backtest",
-                               icon = "sliders-h"),
-            bs4SidebarMenuItem('Research',
+                               icon = icon("sliders-h")
+                     ),
+            menuItem('Research',
                                tabName = "Research",
-                               icon = "lightbulb") #wrench, lock (ionicon.com)
+                               icon = icon("lightbulb")
+                     ) #wrench, lock (ionicon.com)
         )
-        
     ),
     
-    controlbar = bs4DashControlbar(skin = "dark"),
-    footer = bs4DashFooter(
-        copyrights = a(href = "https://www.investwithr.com", target = "https://www.investwithr.com",
-                       "Invest with R"),
-        right_text = format(Sys.Date(), "%Y")
+    
+  
+    # url = "https://www.linkedin.com/in/aaron-hardy-651b2410/",
+    # src = "https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ",
+    
+    
+
+
+    # controlbar = bs4DashControlbar(skin = "dark"),
+    footer = dashboardFooter(
+        left_text = "By Aaron Hardy",
+        right_text = format(Sys.Date(), "%Y")#,
+        # copyrights = a(href = "https://www.investwithr.com", target = "https://www.investwithr.com",
+        #                "Invest with R"),
     ),
-    # title = "test",
     
     
-    body = bs4DashBody(
+    body = dashboardBody(
         # Add custom css style
         tags$head(
             tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
         ),
         
-        bs4TabItems(
-            bs4TabItem(tabName = "Dashboard",
-                       
-                       mod_dashboard_about_ui("dashboard_about")),
-            
-            
-            bs4TabItem(
-                tabName = "Returns",
-                
-                bs4TabSetPanel(
+        setShadow(class = "dropdown-menu"),
+        
+        tabItems(
+            tabItem(tabName = "dashboard",
+                    
+                    mod_dashboard_about_ui("dashboard_about")),
+            tabItem(
+                tabName = "returns",
+                tabsetPanel(
                     id = "returns",
                     side = "left",
-                    bs4TabPanel(
+                    tabPanel(
                         tabName = "Returns",
                         br(),
                         mod_returns_returns_ui("returns", ticker_choices = ticker_choices)
                     ),
-                    
-                    bs4TabPanel(
+                    tabPanel(
                         tabName = "Returns Table",
                         mod_returns_returns_table_ui("returns_table", ticker_choices = ticker_choices)
                     )
                 )
             ),
-            bs4TabItem(
+            tabItem(
                 tabName = "Backtest",
-                bs4TabSetPanel(
+                tabsetPanel(
                     id = "backtest",
                     side = "left",
                     
-                    bs4TabPanel(
+                    tabPanel(
                         tabName = "Backtest",
                         br(),
                         mod_backtest_backtest_ui(
@@ -194,43 +225,40 @@ ui <- bs4DashPage(
                         )
                         
                     ),
-                    
-                    bs4TabPanel(
-                        tabName = "Sortino",
-                        br(),
-                        mod_backtest_sortino_ui("density")
-                    ),
-                    
-                    bs4TabPanel(tabName = "Explanation",
-                                bs4Card(width = 12,
+                    tabPanel(tabName = "Sortino",
+                             br(),
+                             mod_backtest_sortino_ui("density")),
+                    tabPanel(tabName = "Explanation",
+                                boxPlus(width = 12,
                                         p(
                                             "Here is the explanation..."
                                         ))),
-                    bs4TabPanel(tabName = "Ideas",
-                                bs4Card(
-                                    width = 12,
-                                    p(
-                                        span("Feb: +XLE (Energy Select ETF)"),
-                                        span("May: -XLE,"),
-                                        span("+Bonds (e.g,. TLT - 20yr Treasury ETF)"),
-                                        span("Aug: -TLT,"),
-                                        span("+TVIX"),
-                                        span("Sep: -TVIX,"),
-                                        span("+XLK (Technology Select ETF)"),
-                                        span("(Using stop-losses and take-profits (can't be 100% works)).")
-                                    )
-                                ))
+                    tabPanel(tabName = "Ideas",
+                         boxPlus(
+                             width = 12,
+                             p(
+                                 span("Feb: +XLE (Energy Select ETF)"),
+                                 span("May: -XLE,"),
+                                 span("+Bonds (e.g,. TLT - 20yr Treasury ETF)"),
+                                 span("Aug: -TLT,"),
+                                 span("+TVIX"),
+                                 span("Sep: -TVIX,"),
+                                 span("+XLK (Technology Select ETF)"),
+                                 span("(Using stop-losses and take-profits (can't be 100% works)).")
+                             )
+                         ))
+                    
                 )
             ),
-            bs4TabItem(
+            tabItem(
                 tabName = "Research",
-                bs4TabSetPanel(
+                tabsetPanel(
                     id = "research",
                     side = "left",
-                    bs4TabPanel(tabName = "Models",
-                                
+                    tabPanel(tabName = "Models",
+
                                 ),
-                    bs4TabPanel(tabName = "Learning",
+                    tabPanel(tabName = "Learning",
                                 mod_research_learning_ui("learning"))
                 )
             )
