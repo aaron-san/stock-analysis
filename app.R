@@ -63,11 +63,11 @@ library(tidyverse)
 library(quantmod)
 library(PerformanceAnalytics)
 library(lubridate)
-library(highcharter)
-library(ggthemes)
-# library(tidyquant)
-# library(timetk)
-# library(ggrepel)
+# library(highcharter)
+# library(ggthemes)
+library(htmlwidgets) # 0.4 MB
+library(ggrepel) # 0.1 MB
+library(magrittr)
 # library(shinycssloaders)
 # library(sever) # Disconnection message
 
@@ -84,6 +84,66 @@ ticker_choices <- colnames(monthly_rets)[-1]
 cash_rets <- read_rds("data/cash_returns.rds")
 asset_rets <- read_rds("data/asset_returns.rds")
 
+current_yields_file <- list.files("C:/Users/user/Desktop/Aaron/R/Data",
+                                  pattern = "yields", full.names = TRUE) %>% max()
+yields_monthly <- readr::read_csv(current_yields_file) %>% 
+  dplyr::rename(yield = "price") %>%
+  tibbletime::as_tbl_time(index = date) %>% 
+  dplyr::group_by(symbol) %>%
+  tidyr::fill(yield) %>%
+  tibbletime::as_period(period = "months", side = "end", include_endpoints = TRUE) %>% 
+  dplyr::mutate(symbol = factor(symbol, levels = c("DGS1MO", "DGS3MO", "DGS6MO", "DGS1", "DGS2", "DGS5", "DGS7", "DGS10", "DGS20", "DGS30"))) %>% 
+  dplyr::mutate(symbol = dplyr::recode(symbol,
+                                       "DGS1MO" = "1 month", 
+                                       "DGS3MO" = "3 month",
+                                       "DGS6MO" = "6 month", 
+                                       "DGS1" = "1 year",
+                                       "DGS2" = "2 year", 
+                                       "DGS5" = "5 year", 
+                                       "DGS7" = "7 year", 
+                                       "DGS10" = "10 year", 
+                                       "DGS20" = "20 year", 
+                                       "DGS30" = "30 year"))
+
+dates_yields <- yields_monthly %>% 
+  dplyr::distinct(date) %>% 
+  dplyr::pull(date)
+
+current_econ_data_file <- list.files("C:/Users/user/Desktop/Aaron/R/Data",
+                                     pattern = "Data from FRED", full.names = TRUE) %>% max()
+econ_data <- readr::read_csv(current_econ_data_file) %>% 
+  dplyr::group_by(symbol) %>%
+  dplyr::arrange(symbol, date) %>%
+  dplyr::rename(level = price)
+
+gdp <- econ_data %>%
+  dplyr::filter(symbol == "GDP") %>%
+  dplyr::mutate(change = TTR::ROC(level))
+
+dates_gdp <- gdp %>%
+  dplyr::pull(date) %>%
+  unique()
+
+
+inflation <- econ_data %>%
+  dplyr::filter(symbol == "FPCPITOTLZGUSA")
+
+dates_inflation <- inflation %>%
+  dplyr::pull(date) %>%
+  unique()
+
+bond_yields <- econ_data %>%
+  dplyr::filter(symbol %in% c("AAA", "BAA")) %>%
+  dplyr::group_by(symbol)
+
+dates_bond_yields <- bond_yields %>%
+  dplyr::pull(date) %>%
+  unique()
+
+
+
+
+
 # Convert Sass to CSS
 sass(sass_file("www/custom.scss"),
      output = "www/custom.css",
@@ -95,16 +155,16 @@ sass(sass_file("www/custom.scss"),
 ###########
 
 ui <- dashboardPagePlus(
-    collapse_sidebar = FALSE,
-    sidebar_fullCollapse = TRUE,
-    title = "Stock Analysis",
+    
     skin = c("red-light"), #"midnight", "black-light"
     
     # sidebar_background = NULL,
     
     
-    header = dashboardHeaderPlus(enable_rightsidebar = TRUE,
-                                 rightSidebarIcon = "gears"),
+    header = dashboardHeaderPlus(
+      title = "Stock Analysis",
+      enable_rightsidebar = TRUE,
+      rightSidebarIcon = "gears"),
     
     # navbar = bs4DashNavbar(
     #     skin = "light",
@@ -150,7 +210,7 @@ ui <- dashboardPagePlus(
             menuItem(
                 "Charts",
                 icon = icon("bar-chart-o"),
-                menuSubItem("Sub-item 1", tabName = "subitem1"),
+                menuSubItem("Economy", tabName = "economy"),
                 menuSubItem("Sub-item 2", tabName = "subitem2")
             ),
             menuItem('Backtest',
@@ -165,6 +225,36 @@ ui <- dashboardPagePlus(
     ),
     
   
+    rightsidebar = rightSidebar(
+      # background = "dark",
+      rightSidebarTabContent(
+        id = 1,
+        title = "Tab 1",
+        icon = "desktop",
+        active = TRUE,
+        sliderInput(
+          "obs",
+          "Number of observations:",
+          min = 0, max = 1000, value = 500
+        )
+      ),
+      rightSidebarTabContent(
+        id = 2,
+        title = "Tab 2",
+        textInput("caption", "Caption", "Data Summary")
+      ),
+      rightSidebarTabContent(
+        id = 3,
+        icon = "paint-brush",
+        title = "Tab 3",
+        numericInput("obs", "Observations:", 10, min = 1, max = 100)
+      )
+    ),
+    
+    
+    
+    
+    
     # url = "https://www.linkedin.com/in/aaron-hardy-651b2410/",
     # src = "https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ",
     
@@ -177,11 +267,12 @@ ui <- dashboardPagePlus(
         #                "Invest with R"),
     ),
     body = dashboardBody(
-        # Add custom css style
+        
+      # Add custom css style
         tags$head(
             tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
         ),
-        # setShadow(class = "dropdown-menu"),
+        setShadow(class = "box"),
         tabItems(
             tabItem(tabName = "dashboard",
                     mod_dashboard_about_ui("dashboard_about")
@@ -221,10 +312,16 @@ ui <- dashboardPagePlus(
                              mod_backtest_sortino_ui("density")),
                     tabPanel(
                       title = "Explanation",
-                                boxPlus(width = 12,
+                                gradientBox(width = 12,
+                                        title = "gradient box",
+                                            # status = "warning",
+                                        # icon = "fa fa-heart",
+                                        collapsible = TRUE,
+                                        gradientColor = "green", 
                                         p(
                                             "Here is the explanation..."
-                                        ))),
+                                        ),
+                                        footer = dateInput("ids", "date"))),
                     tabPanel(
                       title = "Ideas",
                          boxPlus(
@@ -260,6 +357,14 @@ ui <- dashboardPagePlus(
                          ))
                     
                 )
+            ),
+            tabItem(
+              tabName = "economy",
+              mod_charts_economy_ui("economy",
+                                    dates_gdp = dates_gdp, 
+                                    dates_yields = dates_yields, 
+                                    dates_inflation = dates_inflation, 
+                                    dates_bond_yields = dates_bond_yields)
             ),
             tabItem(
                 tabName = "Research",
@@ -299,6 +404,11 @@ server <- function(input, output, session) {
     
     mod_backtest_sortino_server(id = "density",
                                 monthly_rets = monthly_rets)
+    mod_charts_economy_server(id = "economy",
+                              yields_monthly = yields_monthly, 
+                              gdp = gdp, 
+                              inflation = inflation, 
+                              bond_yields = bond_yields)
     
 }
 

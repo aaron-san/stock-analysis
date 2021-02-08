@@ -8,16 +8,15 @@ mod_research_learning_ui <- function(id) {
         tabBox(
             id = ns("tabcard"),
             width = 8,
-            title = "A card with tabs",
-            tabPanel(tabName = "Quotes",
-                        active = TRUE,
-                     blockQuote(HTML("I can calculate the motions of the heavenly bodies, but not the madness of the people. - <b class='quote_author'>Isaac Newton</b>"), status = "indigo"),
-                     blockQuote(HTML("Be fearful when others are greedy and greedy when others are fearful. - <b class='quote_author'>Warren Buffett</b>"), status = "danger"),
-                     blockQuote(HTML("Only buy something that you'd be perfectly willing to hold if the market shut down for 10 years. - <b class='quote_author'>Warren Buffett</b>"), status = "teal"),
-                     blockQuote(HTML("Stop trying to predict the direction of the stock market, the economy, interest rates, or elections. - <b class='quote_author'>Warren Buffett</b>"), status = "orange")#,
-                        # bs4Quote("Blablabla", status = "warning"),
-                        # bs4Quote("Blablabla", status = "fuchsia")
-                        
+            title = tags$small("Study!"),
+                tabPanel(
+                    tabName = "Quotes",
+                    active = TRUE,
+                    strong("Quotes"),
+                    blockQuote(HTML("I can calculate the motions of the heavenly bodies, but not the madness of the people. - <b class='quote_author'>Isaac Newton</b>"), status = "indigo"),
+                    blockQuote(HTML("Be fearful when others are greedy and greedy when others are fearful. - <b class='quote_author'>Warren Buffett</b>"), status = "danger"),
+                    blockQuote(HTML("Only buy something that you'd be perfectly willing to hold if the market shut down for 10 years. - <b class='quote_author'>Warren Buffett</b>"), status = "teal"),
+                    blockQuote(HTML("Stop trying to predict the direction of the stock market, the economy, interest rates, or elections. - <b class='quote_author'>Warren Buffett</b>"), status = "orange")
             ),
             tabPanel(tabName = "Data Preprocessing",
                         active = FALSE,
@@ -35,8 +34,9 @@ mod_research_learning_ui <- function(id) {
                         )
                         ),
             tabPanel(tabName = "Tab 3",
-                        active = FALSE,
-                        "Content 3")
+                     active = FALSE,
+                     strong("Content 3")
+                     )
         )
     )
 }

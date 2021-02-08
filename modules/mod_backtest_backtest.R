@@ -1,9 +1,6 @@
 
 
 
-
-
-
 mod_backtest_backtest_ui <-
     function(id, ticker_choices, monthly_rets) {
         ns <- NS(id)

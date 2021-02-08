@@ -21,13 +21,38 @@ p {
   margin-right: 15px;
 }
 
-/*-----
-/* Nav */
-/*-----*/
-.navbar-primary {
-  background-color: aquamarine;
+.main-header .navbar {
+  /*background-color: ;*/
+  max-height: 0;
+  /*width: 100%;*/
+  /*min-height: 75px;*/
+  /*border-radius: 2%;*/
+  margin-bottom: -1px;
+  /*padding-bottom: 10px;*/
+  /*position: relative;*/
+  border-top: solid black 1px;
+  border-right: solid black 1px;
+  border-bottom: solid black 1px;
 }
 
+.skin-red-light .main-header .logo {
+  font-family: 'Courier New', monospace;
+  color: white;
+  /*'Times New Roman', Times, serif;*/
+  /*transform: rotate(-3deg);*/
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  opacity: 100%;
+  margin-left: 3px;
+  border: solid black 1px;
+  /*text-decoration: underline dotted forestgreen;*/
+}
+
+/* Head */
+/* Nav */
+/*.navbar-primary {
+	background-color: $color-four;
+}*/
 .nav-pills .nav-link {
   border-radius: .4rem 0 0 0;
   border-bottom: 1px solid lightgray;
@@ -123,6 +148,13 @@ body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
   /*border: 2px solid lightsteelblue;*/
 }
 
+.skin-red-light .main-header .navbar {
+  /*border: white 2px solid;*/
+  /*border-radius: 3%;*/
+  /*background: #ca5c48;*/
+  border: solid black 1px 1px 1px 0;
+}
+
 .navbar-test {
   color: #343a40;
 }
@@ -156,11 +188,10 @@ body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
 }
 
 /* bar */
-.irs--shiny .irs-grid-text,
+/*.irs--shiny .irs-grid-text,
 .irs--shiny .irs-min, .irs--shiny .irs-max {
-  color: white;
-}
-
+    color: white;
+}*/
 /*
 .irs--shiny .irs-handle {
   background-color: palegoldenrod;
@@ -209,4 +240,8 @@ body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
 
 .bootstrap-select.form-control {
   margin: 0;
+}
+
+blockquote {
+  border-left: 5px solid forestgreen;
 }
