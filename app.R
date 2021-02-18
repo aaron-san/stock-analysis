@@ -1,4 +1,167 @@
 
+# shinyWidgetsGallery()
+
+# icons: desktop, gears, paint-brush,  "fa fa-users"
+
+# widgetUserBox(
+#   title = "Elizabeth Pierce",
+#   subtitle = "Web Designer",
+#   type = NULL,
+#   width = 12,
+#   src = "https://adminlte.io/themes/AdminLTE/dist/img/user3-128x128.jpg",
+#   background = TRUE,
+#   backgroundUrl = "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&h=350",
+#   closable = TRUE,
+#   "Some text here!",
+#   footer = "The footer here!"
+# )
+
+
+# box(
+#   width = NULL,
+#   title = "App Buttons",
+#   status = NULL,
+#   appButton(
+#     url = "http://google.com",
+#     label = "Users", 
+#     icon = "fa fa-users", 
+#     enable_badge = TRUE, 
+#     badgeColor = "purple", 
+#     badgeLabel = 891
+#   ),
+#   appButton(
+#     label = "Edit", 
+#     icon = "fa fa-edit", 
+#     enable_badge = FALSE, 
+#     badgeColor = NULL, 
+#     badgeLabel = NULL
+#   ),
+#   appButton(
+#     label = "Likes", 
+#     icon = "fa fa-heart-o", 
+#     enable_badge = TRUE, 
+#     badgeColor = "red", 
+#     badgeLabel = 3
+#   )
+# )
+
+
+# box(
+#   solidHeader = FALSE,
+#   title = "Status summary",
+#   background = NULL,
+#   width = 12,
+#   status = "danger",
+#   footer = fluidRow(
+#     column(
+#       width = 6,
+#       descriptionBlock(
+#         number = "17%", 
+#         number_color = "green", 
+#         number_icon = "fa fa-caret-up",
+#         header = "$35,210.43", 
+#         text = "TOTAL REVENUE", 
+#         right_border = TRUE,
+#         margin_bottom = FALSE
+#       )
+#     ),
+#     column(
+#       width = 6,
+#       descriptionBlock(
+#         number = "18%", 
+#         number_color = "red", 
+#         number_icon = "fa fa-caret-down",
+#         header = "1200", 
+#         text = "GOAL COMPLETION", 
+#         right_border = FALSE,
+#         margin_bottom = FALSE
+#       )
+#     )
+#   )
+# )
+
+
+# boxPlus(
+#   width = 12,
+#   title = "boxPlus with sidebar", 
+#   closable = TRUE, 
+#   status = "warning", 
+#   solidHeader = FALSE, 
+#   collapsible = TRUE,
+#   enable_sidebar = TRUE,
+#   sidebar_width = 25,
+#   sidebar_start_open = TRUE,
+#   sidebar_content = tagList(
+#     checkboxInput("somevalue", "Some value", FALSE),
+#     verbatimTextOutput("value"),
+#     sliderInput(
+#       "slider_boxsidebar", 
+#       "Number of observations:",
+#       min = 0, 
+#       max = 1000, 
+#       value = 500
+#     )
+#   ),
+#   plotOutput("boxSidebarPlot")
+# )
+
+# box(
+#   title = "Box with a green boxPad",
+#   status = "warning",
+#   width = NULL,
+#   fluidRow(
+#     column(width = 6),
+#     column(
+#       width = 6,
+#       boxPad(
+#         color = "green",
+#         descriptionBlock(
+#           header = "8390", 
+#           text = "VISITS", 
+#           right_border = FALSE,
+#           margin_bottom = TRUE
+#         ),
+#         descriptionBlock(
+#           header = "30%", 
+#           text = "REFERRALS", 
+#           right_border = FALSE,
+#           margin_bottom = TRUE
+#         ),
+#         descriptionBlock(
+#           header = "70%", 
+#           text = "ORGANIC", 
+#           right_border = FALSE,
+#           margin_bottom = FALSE
+#         )
+#       )
+#     )
+#   )
+# )
+
+# box(
+#   title = "Inputs", background = "black",
+#   "Box content here", br(), "More box content",
+#   sliderInput("slider", "Slider input:", 1, 100, 50),
+#   textInput("text", "Text input:")
+# )
+
+# ?validStatuses
+# ?validColors
+
+# dropdownMenu(type = "tasks", badgeStatus = "success",
+#              taskItem(value = 90, color = "green",
+#                       "Documentation"
+#              ),
+#              taskItem(value = 17, color = "aqua",
+#                       "Project X"
+#              ),
+#              taskItem(value = 75, color = "yellow",
+#                       "Server deployment"
+#              ),
+#              taskItem(value = 80, color = "red",
+#                       "Overall project"
+#              )
+# )
 
 
 
@@ -64,7 +227,7 @@ library(quantmod)
 library(PerformanceAnalytics)
 library(lubridate)
 # library(highcharter)
-# library(ggthemes)
+library(ggthemes)
 library(htmlwidgets) # 0.4 MB
 library(ggrepel) # 0.1 MB
 library(magrittr)
@@ -79,69 +242,7 @@ lapply(
 )
 
 # Load data
-monthly_rets <- read_rds("data/monthly_rets_tbl.rds")
-ticker_choices <- colnames(monthly_rets)[-1]
-cash_rets <- read_rds("data/cash_returns.rds")
-asset_rets <- read_rds("data/asset_returns.rds")
-
-current_yields_file <- list.files("C:/Users/user/Desktop/Aaron/R/Data",
-                                  pattern = "yields", full.names = TRUE) %>% max()
-yields_monthly <- readr::read_csv(current_yields_file) %>% 
-  dplyr::rename(yield = "price") %>%
-  tibbletime::as_tbl_time(index = date) %>% 
-  dplyr::group_by(symbol) %>%
-  tidyr::fill(yield) %>%
-  tibbletime::as_period(period = "months", side = "end", include_endpoints = TRUE) %>% 
-  dplyr::mutate(symbol = factor(symbol, levels = c("DGS1MO", "DGS3MO", "DGS6MO", "DGS1", "DGS2", "DGS5", "DGS7", "DGS10", "DGS20", "DGS30"))) %>% 
-  dplyr::mutate(symbol = dplyr::recode(symbol,
-                                       "DGS1MO" = "1 month", 
-                                       "DGS3MO" = "3 month",
-                                       "DGS6MO" = "6 month", 
-                                       "DGS1" = "1 year",
-                                       "DGS2" = "2 year", 
-                                       "DGS5" = "5 year", 
-                                       "DGS7" = "7 year", 
-                                       "DGS10" = "10 year", 
-                                       "DGS20" = "20 year", 
-                                       "DGS30" = "30 year"))
-
-dates_yields <- yields_monthly %>% 
-  dplyr::distinct(date) %>% 
-  dplyr::pull(date)
-
-current_econ_data_file <- list.files("C:/Users/user/Desktop/Aaron/R/Data",
-                                     pattern = "Data from FRED", full.names = TRUE) %>% max()
-econ_data <- readr::read_csv(current_econ_data_file) %>% 
-  dplyr::group_by(symbol) %>%
-  dplyr::arrange(symbol, date) %>%
-  dplyr::rename(level = price)
-
-gdp <- econ_data %>%
-  dplyr::filter(symbol == "GDP") %>%
-  dplyr::mutate(change = TTR::ROC(level))
-
-dates_gdp <- gdp %>%
-  dplyr::pull(date) %>%
-  unique()
-
-
-inflation <- econ_data %>%
-  dplyr::filter(symbol == "FPCPITOTLZGUSA")
-
-dates_inflation <- inflation %>%
-  dplyr::pull(date) %>%
-  unique()
-
-bond_yields <- econ_data %>%
-  dplyr::filter(symbol %in% c("AAA", "BAA")) %>%
-  dplyr::group_by(symbol)
-
-dates_bond_yields <- bond_yields %>%
-  dplyr::pull(date) %>%
-  unique()
-
-
-
+source("data.R")
 
 
 # Convert Sass to CSS
@@ -155,8 +256,8 @@ sass(sass_file("www/custom.scss"),
 ###########
 
 ui <- dashboardPagePlus(
-    
-    skin = c("red-light"), #"midnight", "black-light"
+    useShinyjs(),
+    skin = "red-light", #c("deeppink2", "mistyrose3", "steelblue1")red-light"), #"midnight", "black-light"
     
     # sidebar_background = NULL,
     
@@ -164,17 +265,39 @@ ui <- dashboardPagePlus(
     header = dashboardHeaderPlus(
       title = "Stock Analysis",
       enable_rightsidebar = TRUE,
-      rightSidebarIcon = "gears"),
+      rightSidebarIcon = "gears",
+      fixed = TRUE,
+      left_menu = tagList(
+        dropdownBlock(
+          id = "mydropdown",
+          title = "Dropdown 1",
+          icon = "sliders",
+          screenshotButton(selector = ".content", label = "Take a Screenshot"),
+          sliderInput(
+            inputId = "n",
+            label = "Number of observations",
+            min = 10, max = 100, value = 30
+          ),
+          prettyToggle(
+            inputId = "na",
+            label_on = "NAs kept",
+            label_off = "NAs removed",
+            icon_on = icon("check"),
+            icon_off = icon("remove")
+          )
+        )
+        )
+      ),
     
-    # navbar = bs4DashNavbar(
-    #     skin = "light",
-    #     status = "white",
-    #     sidebarIcon = "bars",
-    #     # leftUi = actionButton("goButton1", "Go1"),
-    #     rightUi = screenshotButton(selector = ".content", label = "Take a Screenshot"),
-    #     fixed = TRUE,
-    #     compact = TRUE,
-    #     p("Tools for investing!", class = "navbar-text")
+    # navbar = bs4Dash::bs4DashNavbar(
+        # skin = "light",
+        # status = "white",
+        # sidebarIcon = "bars",
+        # leftUi = actionButton("goButton1", "Go1"),
+        # rightUi = ,
+        # fixed = TRUE,
+        # compact = TRUE,
+        # p("Tools for investing!", class = "navbar-text")
     # ),
     
     sidebar = dashboardSidebar(
@@ -201,9 +324,9 @@ ui <- dashboardPagePlus(
                 badgeColor = "green"
             ),
             menuItem(
-                "Widgets",
-                icon = icon("th"),
-                tabName = "widgets",
+                "Notes",
+                icon = icon("pen"),
+                tabName = "notes",
                 badgeLabel = "new",
                 badgeColor = "green"
             ),
@@ -211,7 +334,7 @@ ui <- dashboardPagePlus(
                 "Charts",
                 icon = icon("bar-chart-o"),
                 menuSubItem("Economy", tabName = "economy"),
-                menuSubItem("Sub-item 2", tabName = "subitem2")
+                menuSubItem("Securities", tabName = "securities")
             ),
             menuItem('Backtest',
                                tabName = "Backtest",
@@ -267,18 +390,21 @@ ui <- dashboardPagePlus(
         #                "Invest with R"),
     ),
     body = dashboardBody(
-        
-      # Add custom css style
-        tags$head(
-            tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
-        ),
-        setShadow(class = "box"),
+      
+      # Add custom css style  
+      includeCSS("www/custom.css"),
+      
+        # setShadow(class = "box"),
         tabItems(
             tabItem(tabName = "dashboard",
-                    mod_dashboard_about_ui("dashboard_about")
+                    mod_dashboard_about_ui("dashboard_about", 
+                                           inflation = inflation)
                     ),
             tabItem(
                 tabName = "returns",
+                
+                br(),
+                br(),
                 tabsetPanel(
                     id = "Returns",
                     tabPanel(
@@ -309,10 +435,13 @@ ui <- dashboardPagePlus(
                     tabPanel(
                       title = "Sortino",
                              br(),
+                             br(),
+                             br(),
                              mod_backtest_sortino_ui("density")),
                     tabPanel(
                       title = "Explanation",
-                                gradientBox(width = 12,
+                      br(),
+                      gradientBox(width = 12,
                                         title = "gradient box",
                                             # status = "warning",
                                         # icon = "fa fa-heart",
@@ -324,7 +453,7 @@ ui <- dashboardPagePlus(
                                         footer = dateInput("ids", "date"))),
                     tabPanel(
                       title = "Ideas",
-                         boxPlus(
+                      boxPlus(
                            title = "trading idea",  
                            width = 12,
                              p(
@@ -359,12 +488,25 @@ ui <- dashboardPagePlus(
                 )
             ),
             tabItem(
+              tabName = "notes",
+              mod_notes_ui("notes")
+            ),
+            
+            
+            tabItem(
               tabName = "economy",
               mod_charts_economy_ui("economy",
                                     dates_gdp = dates_gdp, 
                                     dates_yields = dates_yields, 
                                     dates_inflation = dates_inflation, 
                                     dates_bond_yields = dates_bond_yields)
+            ),
+            tabItem(
+              tabName = "securities",
+              mod_charts_securities_ui(id = "securities",
+                                       industry_choices = industry_choices,
+                                       field_choices = field_choices)
+              
             ),
             tabItem(
                 tabName = "Research",
@@ -409,6 +551,9 @@ server <- function(input, output, session) {
                               gdp = gdp, 
                               inflation = inflation, 
                               bond_yields = bond_yields)
+    mod_dashboard_about_server(id = "dashboard_about")
+    mod_charts_securities_server(id = "securities",
+                                 fundamentals_data = fundamentals_data)
     
 }
 

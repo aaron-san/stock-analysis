@@ -5,12 +5,12 @@ mod_backtest_backtest_ui <-
     function(id, ticker_choices, monthly_rets) {
         ns <- NS(id)
         
-        tagList(fluidRow(
-            # width = 12,
-            boxPlus(title = "Decision Rules",
+        tagList(
+            fluidRow(
+            boxPlus(
+                width = 6,
+                title = "Decision Rules",
                     # status = "secondary",
-                    # fluidRow(
-                    # width = 12,
                     # title = "Test a Decision Rule",
                     # status = "primary",
                     # solidHeader = T,
@@ -28,17 +28,18 @@ mod_backtest_backtest_ui <-
                             )
                         ))
                     )
-                    ),
-                    
+                    )
+            ),
+                    fluidRow(
                     boxPlus(
-                        # width = 6,
+                        width = 4,
                         title = "Inputs",
                         # status = "secondary",
                         solidHeader = FALSE,
                         class = "input_card",
                         # fluidRow(id = "decision_rule_input",
                         selectInput(
-                            width = 200,
+                            # width = 200,
                             inputId = ns("ticker_decision_rule"),
                             label = "Ticker used in decision rule (x)",
                             selected = "EEM",
@@ -47,7 +48,7 @@ mod_backtest_backtest_ui <-
                         ),
                         
                         selectInput(
-                            width = 200,
+                            # width = 200,
                             inputId = ns("invested_ticker"),
                             label = "Ticker to invest in if rule is triggered",
                             selected = "EEM",
@@ -56,19 +57,19 @@ mod_backtest_backtest_ui <-
                         ),
                         
                         textInput(
-                            width = 400,
+                            # width = 400,
                             # id = "signal_rule",
                             inputId = ns("signal_rule"),
                             "Enter a decision rule:",
                             value = "if_else(x < 0, 1, 0)"
                             # )
                             
-                            
+                        
                         ),
                         # br(),
                         # fluidRow(id = "decision_rule_input",
                         sliderInput(
-                            width = 400,
+                            # width = 400,
                             inputId = ns("daterange_bt"),
                             "Select a Date Range",
                             min = monthly_rets %>% pull(date) %>% min(),
@@ -84,20 +85,23 @@ mod_backtest_backtest_ui <-
                         ),
                         span(),
                         actionButton(
-                            width = 70,
+                            # width = 70,
                             inputId = ns("bt_button"),
                             "Plot",
                             icon("caret-right"),
                             class = "btn-primary"
                         )
-                    )
+                    
             ),
-            fluidRow(boxPlus(# width = 8,
+            
+            boxPlus(
+                width = 8,
                 title = "Backtest Plot",
                 # status = "secondary",
                 plotOutput(
                     ns("backtest_plot")
-                ))))
+                )))
+        )
     }
 
 

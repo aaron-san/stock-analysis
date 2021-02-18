@@ -1,23 +1,10 @@
 
 
-
-
-
-
-
-
-
-
-
-
-
-# returnsReturnsModule
-
-
 mod_returns_returns_ui <- function(id, ticker_choices) {
     ns <- NS(id)
     
     tagList(
+        
         fluidRow(    
         boxPlus(
             width = 12,
@@ -34,29 +21,41 @@ mod_returns_returns_ui <- function(id, ticker_choices) {
             #     dropdownDivider(),
             #     dropdownItem(url = "", name = "item3")
             # ),
-            fluidRow(span(withTags(span(
-                b("Large-Mid-Small Cap equities"),
-                ul(li("SPY, MDY, IWM")),
-                b("Intl.and emerging markets"),
-                ul(li("EFA, EEM"))
-            ))),
-            span(withTags(span(
-                b("Bonds"),
-                ul(li("AGG, TIP, TLT, LQD")),
-                b("Commodities"),
-                ul(li("GSG"))
-            ))), 
-            span(withTags(
-                span(b("Real Estate"),
-                     ul(li("RWR, RWX, MBB")),
-                     b("Cash"),
-                     ul(li("SHV")))
-            )))
+            column(width = 4,
+                h4("Large-Mid-Small Cap equities"),
+                tags$ul(tags$li(h5("SPY - Large cap U.S. Equities, blend style")), 
+                        tags$li(h5("MDY - S&P Midcap 400 ETF Trust, seeks to provide investment results that, before expenses, correspond to the S&P MidCap 400 Index")), 
+                        tags$li(h5("IWM - iShares Russell 2000 ETF, seeks to track the investment results of an index composed of small-capitalization U.S. equities"))
+                   ),
+                h4("Intl.and emerging markets"),
+                tags$ul(tags$li(h5("EFA - iShares EAFE (index of large- and mid-cap companies in developed countries ex/ U.S. and Canada)")), 
+                        tags$li(h5("EEM - iShares MSCI Emerging Markets ETF, exposure to large and mid-sized companies in emerging markets"))
+                   )
+            ),
+            column(width = 4,
+                h4("Bonds"),
+                tags$ul(tags$li(h5("AGG - U.S. Total bond market, all-term")), 
+                        tags$li(h5("TIP")), 
+                        tags$li(h5("TLT - Shares 20+ year Bonds")), 
+                        tags$li(h5("LQD - iShares Investment Grade Corporate Bonds, U.S."))
+                   ),
+                h4("Commodities"),
+                tags$ul(tags$li(h5("GSG - iShares S&P GSCI Commodity-Indexed, seeks to track the results of a fully collateralized investment in futures contracts on an index composed of a diversified group of commodities futures")))
+            ), 
+            column(width = 4,
+              h4("Real Estate"),
+              tags$ul(tags$li(h5("RWR - SPDR Dow Jones REIT ETF, seeks to provide investment results that, before fees and expenses, correspond to the return of the Dow Jones U.S. Select REIT Index, designed to serve as a prox for direct real estate investing")), 
+                      tags$li(h5("RWX - SPDR Dow Jones International Real Estate ETF, seeks to provide investment results that, before fees and expenses, correspond to the toral return of the Dow Jones Global ex-U.S. Select Real Estate Securities Index, access to publicly traded real estate securities in non-U.S. developed and emerging markets")), 
+                      tags$li(h5("MBB - iShares MBS ETF, seeks to track the investment results of an index composed of investment-grade mortgage-backed securities"))),
+                 h4("Cash"),
+              tags$ul(tags$li(h5("SHV - iShares Short Treasury Bond ETF, seeks to track the investment results of an index composed of U.S. Treasury bonds with remaining maturities one year or less")))
+            )
         )
+        
         ),
         fluidRow(
             boxPlus(
-                width = 6,
+                width = 4,
                 class = "input_card",
                 title = "Inputs",
                 # status = "secondary",
@@ -64,7 +63,12 @@ mod_returns_returns_ui <- function(id, ticker_choices) {
                     width = 240,
                     inputId = ns("tickers"),
                     label = "Select Tickers:",
-                    choices = ticker_choices,
+                    choices = list(
+                        Equities = c("SPY", "MDY", "IWM"),
+                        `International & Emerging Markets` = c("EFA", "EEM"),
+                        Bonds = c("AGG", "TIP", "TLT", "LQD"),
+                        Commodities = "GSG",
+                        `Real Estate` = c("RWR", "RWX", "MBB")),
                     selected = ticker_choices[1:5],
                     options = list(`actions-box` = TRUE),
                     multiple = TRUE
@@ -87,11 +91,14 @@ mod_returns_returns_ui <- function(id, ticker_choices) {
             ),
             
             boxPlus(
-                width = 6,
+                width = 8,
                 title = "Cumulative Returns Plot",
                     # status = "secondary",
                     # width = 8,
-                    plotlyOutput(ns("returns_plot")))
+                    plotOutput(ns("returns_plot"),
+                               width = 200),
+                footer = "footer"
+                )
         )
     )
 }
@@ -115,7 +122,7 @@ mod_returns_returns_server <- function(id, monthly_rets) {
                      
                      
                      
-                     output$returns_plot <- renderPlotly({
+                     output$returns_plot <- renderPlot({
                          # Show message if input tickers are not selected
                          validate(
                              need(input$showPlot, "Please click 'Plot'."),
@@ -133,7 +140,7 @@ mod_returns_returns_server <- function(id, monthly_rets) {
                          
                          
                          isolate(
-                             returns_plot <-
+                             # returns_plot <-
                                  monthly_rets %>%
                                  filter(date >= min_date()) %>%
                                  select(date, isolate(input$tickers)) %>%
@@ -149,14 +156,14 @@ mod_returns_returns_server <- function(id, monthly_rets) {
                                      date == max(date), ticker, NA_character_
                                  )) %>%
                                  ggplot(aes(date, idx, color = ticker)) +
-                                 geom_line(size = .5) +
-                                 # theme_minimal() +
+                                 geom_line(size = 1.5) +
+                                 theme_minimal() +
                                  labs(
                                      x = NULL,
                                      y = "Index Level",
                                      title = "How much did assets grow over time?"
                                  ) +
-                                 theme_solarized() +
+                                 # theme_solarized() +
                                  theme(legend.title = element_blank())
                              # theme_update(
                              #         legend.position = "top",
@@ -171,8 +178,8 @@ mod_returns_returns_server <- function(id, monthly_rets) {
                          )
                          
                          
-                         ggplotly(returns_plot) %>%
-                             config(displayModeBar = FALSE)
+                         # ggplotly(returns_plot) %>%
+                         #     config(displayModeBar = FALSE)
                      })
                  })
 }

@@ -1,15 +1,12 @@
 
 
-
-
-
-
-# returnsReturnsTableModule
-
 mod_returns_returns_table_ui <- function(id, ticker_choices) {
     ns <- NS(id)
     
-    tagList(boxPlus(
+    tagList(
+        
+        fluidRow(
+            boxPlus(
         width = 12,
         # status = "secondary",
         gradientColor = ".bg-gradient-secondary",
@@ -33,9 +30,9 @@ mod_returns_returns_table_ui <- function(id, ticker_choices) {
                 
             ),
             actionButton(
-                width = 150,
-                inputId = ns("update"),
-                label = "Update table",
+                width = 120,
+                inputId = ns("show"),
+                label = "Show data",
                 icon("caret-right"),
                 class = "btn-primary"
             )
@@ -47,6 +44,7 @@ mod_returns_returns_table_ui <- function(id, ticker_choices) {
         # footer = "Hover for state-by-state incident stats, scaled below",
         width = 12)
     ))
+    )
     
     
 }
@@ -70,11 +68,12 @@ mod_returns_returns_table_server <- function(id, monthly_rets) {
                      
                      
                      
+                     observeEvent(input$show, {
                      
-                     output$returns_table = DT::renderDataTable({
-                         # Take dependency on button
-                         input$update
-                         req(isolate(min_date()))
+                     
+                        output$returns_table = DT::renderDataTable({
+                     
+                          req(isolate(min_date()))
                          
                          
                          datatable(
@@ -102,6 +101,7 @@ mod_returns_returns_table_server <- function(id, monthly_rets) {
                              )
                          )
                          
+                     })
                      })
                  })
 }

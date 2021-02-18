@@ -3,6 +3,9 @@ mod_backtest_sortino_ui <- function(id) {
     ns <- NS(id)
     
     tagList(
+        
+        br(),
+        br(),
         fluidRow(
             boxPlus(
                 # width = 6,
@@ -49,22 +52,29 @@ mod_backtest_sortino_server <- function(id, monthly_rets) {
                      
                      output$perf_chart <- renderPlot(
                          
-                         
-                         rolling_sortino %>% 
-                             as_tibble() %>% 
-                             mutate(date = index(rolling_sortino)) %>% 
-                             select(date, `24-month rolling sortino`) %>% 
-                             drop_na() %>%
-                             ggplot(aes(x = date, y = `24-month rolling sortino`, 
-                                        fill = ifelse(`24-month rolling sortino` >= 0, "green", "red"))) + 
-                             geom_col(alpha = 0.6) +
-                             geom_hline(yintercept = 0, color = "red", alpha = 0.5) +
-                             theme_minimal() + 
-                             theme(legend.position = "") + 
-                             labs(x = "",
-                                  y = "",
-                                  title = "24-month Rolling Sortino")
+                         withProgress(message = 'Fetching data', value = 0, {
                              
+                             incProgress(1/3, detail = "Filtering data")
+                             data <- rolling_sortino %>% 
+                                 as_tibble() %>% 
+                                 mutate(date = index(rolling_sortino)) %>% 
+                                 select(date, `24-month rolling sortino`) %>% 
+                                 drop_na() 
+                         
+                         
+                             incProgress(2/3, detail = "Filtering data")
+                             data %>% 
+                                 ggplot(aes(x = date, y = `24-month rolling sortino`, 
+                                            fill = ifelse(`24-month rolling sortino` >= 0, "green", "red"))) + 
+                                 geom_col(alpha = 0.6) +
+                                 geom_hline(yintercept = 0, color = "red", alpha = 0.5) +
+                                 theme_minimal() + 
+                                 theme(legend.position = "") + 
+                                 labs(x = "",
+                                      y = "",
+                                      title = "24-month Rolling Sortino")
+                         }
+                         )
                      )
                      
                      
