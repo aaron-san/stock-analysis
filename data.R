@@ -6,38 +6,80 @@ ticker_choices <- colnames(monthly_rets)[-1]
 cash_rets <- read_rds("data/cash_returns.rds")
 asset_rets <- read_rds("data/asset_returns.rds")
 
-current_fundamentals_data_file <- list.files("data", pattern = "fundamentals_data", full.names = TRUE) %>% max()
-fundamentals_raw <- read_csv(current_fundamentals_data_file,
-                             col_types = "cDdddddddddddddddddddddddddddddcccccdddddddddddddddddddddddddddddddddddddddd")
+
+# Load fundamentals data
+# read_csv()
 # c = character, D = date, d = double, _ = skip, i = integer, n = number
 
-fundamentals_data <- 
-    fundamentals_raw %>%
-    group_by(industry, date) %>%
-    mutate(ind_rev = sum(total_revenue, na.rm = TRUE)) %>% 
-    ungroup() %>%
-    mutate(market_share = total_revenue / ind_rev) %>% 
-    select(-sector, -industry_id, -form) %>% 
-    pivot_longer(-c(ticker, date, industry, company_name), names_to = "field", values_to = "value")
-               
-                     
-  
-profile_data <- fundamentals_raw %>%
-    select(ticker, sector, industry, form,
-           industry_id, company_name)
-field_choices <- fundamentals_data %>% 
-    ungroup() %>% 
-    distinct(field) %>% pull()
+col_types <- list(ticker = "c", date = "D", form = "c", industry = "c", short_name = "c", long_business_summary = "c")
+current_bs_1 <- list.files("data/cleaned", pattern = "balance_sheets_1", full.names = TRUE) %>% max()
+bs_1 <- read_csv(current_bs_1, col_types = col_types)
+current_bs_2 <- list.files("data/cleaned", pattern = "balance_sheets_2", full.names = TRUE) %>% max()
+bs_2 <- read_csv(current_bs_2, col_types = col_types)
+current_bs_3 <- list.files("data/cleaned", pattern = "balance_sheets_3", full.names = TRUE) %>% max()
+bs_3 <- read_csv(current_bs_3, col_types = col_types)
+current_bs_4 <- list.files("data/cleaned", pattern = "balance_sheets_4", full.names = TRUE) %>% max()
+bs_4 <- read_csv(current_bs_4, col_types = col_types)
 
-industry_choices <- fundamentals_data %>% 
-    ungroup() %>% 
-    drop_na(industry) %>% 
-    distinct(industry) %>% pull()
+current_is_1 <- list.files("data/cleaned", pattern = "income_statements_1", full.names = TRUE) %>% max()
+is_1 <- read_csv(current_is_1, col_types = col_types)
+current_is_2 <- list.files("data/cleaned", pattern = "income_statements_2", full.names = TRUE) %>% max()
+is_2 <- read_csv(current_is_2, col_types = col_types)
+current_is_3 <- list.files("data/cleaned", pattern = "income_statements_3", full.names = TRUE) %>% max()
+is_3 <- read_csv(current_is_3, col_types = col_types)
+current_is_4 <- list.files("data/cleaned", pattern = "income_statements_4", full.names = TRUE) %>% max()
+is_4 <- read_csv(current_is_4, col_types = col_types)
+
+current_cf_1 <- list.files("data/cleaned", pattern = "cash_flow_statements_1", full.names = TRUE) %>% max()
+cf_1 <- read_csv(current_cf_1, col_types = col_types)
+current_cf_2 <- list.files("data/cleaned", pattern = "cash_flow_statements_2", full.names = TRUE) %>% max()
+cf_2 <- read_csv(current_cf_2, col_types = col_types)
+current_cf_3 <- list.files("data/cleaned", pattern = "cash_flow_statements_3", full.names = TRUE) %>% max()
+cf_3 <- read_csv(current_cf_3, col_types = col_types)
+current_cf_4 <- list.files("data/cleaned", pattern = "cash_flow_statements_4", full.names = TRUE) %>% max()
+cf_4 <- read_csv(current_cf_4, col_types = col_types)
+
+
+
+# fundamentals_data <- 
+#   fundamentals_raw %>%
+#   group_by(industry, date) %>%
+#   # drop_na(total_revenue) %>%
+#   # Calculate ratios  
+#   mutate(market_share = total_revenue / sum(total_revenue, na.rm = TRUE)) %>%
+#   mutate(gross_margin = (total_revenue - cost_of_revenue) / total_revenue) %>% 
+#   #
+#   select(-sector, -industry_id, -form) %>% 
+#   ungroup() %>% 
+#   pivot_longer(-c(ticker, date, industry, company_name), names_to = "field", values_to = "value")
+#   
+
+             
+  
+# profile_data <- fundamentals_raw %>%
+#     select(ticker, sector, industry, form, company_name)
+
+
+
+
+field_choices <- bs_1 %>% 
+  full_join(is_1) %>% 
+  full_join(cf_1) %>% 
+  colnames() %>% 
+  setdiff(c("ticker", "date", "form", "industry", "short_name", "long_business_summary"))
+
+industry_choices <- bs_1 %>% 
+  full_join(is_1) %>% 
+  full_join(cf_1) %>% 
+  drop_na(industry) %>% 
+  distinct(industry) %>% 
+  pull()
 
                  
                  
 current_econ_data_file <- list.files("data", pattern = "Data from FRED", full.names = TRUE) %>% max()
-econ_data <- readr::read_csv(current_econ_data_file) %>% 
+col_types <- list(symbol = col_character(), date = col_date(), price = col_double())
+econ_data <- read_csv(current_econ_data_file, col_types = col_types) %>% 
     dplyr::group_by(symbol) %>%
     dplyr::arrange(symbol, date) %>%
     dplyr::rename(level = price)

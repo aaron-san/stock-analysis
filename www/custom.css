@@ -295,3 +295,7 @@ body > div.wrapper > nav > ul.navbar-nav.ml-auto > .action-button {
 blockquote {
   border-left: 5px solid forestgreen;
 }
+
+.widget-user {
+  box-shadow: 3px 5px 10px grey;
+}

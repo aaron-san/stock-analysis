@@ -93,38 +93,58 @@ mod_dashboard_about_ui <- function(id, inflation) {
                     # bs4Dash::bs4UserCard(
                     # fluidRow(
                         # div(
-                        div(style="display: flex; align-items: center;",
-                            div(
-                            div(tags$img(src="https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ", 
-                                        alt="Aaron Hardy", 
-                                        style="width: 180px; border-radius: 5px;
-                                        box-shadow: 3px 5px 10px grey; margin-top: 25px;")
-                                ),
-                            div(actionButton(inputId = ns("toggleAdvanced"),
-                                             label = "Contact",
-                                             class="btn",
-                                             style="width: 180px;
-                                             background-color: #707070; color: white;
-                                             border: none; margin: 6px 0 6px 0;
-                                             box-shadow: 1px 3px 5px grey; margin-top: 25px;"),
-                                shinyjs::hidden(
-                                    div(id = ns("advanced"), a("aaronhardy6@gmail.com", href="aaronhardy6@gmail.com"))
-                                )
-                                )
-                            
-                         
-                            ),
-                                    # style="float: right;"),
-                            div(style="margin: 15px;",
-                                h2("Aaron Hardy"),
-                                h4("App Creator"),
-                                p("Thank you for using this app. I designed it to make investing more fun and more accessible to serious investors."),
-                                p(HTML("If you would like to see more of my work, please visit my <a href = 'https://www.linkedin.com/in/aaron-hardy-651b2410/'>LinkedIn</a> profile.")),
-                                p(HTML("I also maintain a blog at <a href = 'https://www.freeanalystnotes.com/'>FreeAnalystNotes.com</a>. and
-                    <a href = 'https://www.investwithr.com'>InvestWithR.com</a>"))
+                    br(),
+                    widgetUserBox(
+                        title = "Aaron Hardy",
+                        subtitle = "App creator",
+                        type = NULL,
+                        width = 8,
+                        backround = TRUE,
+                        # backgroundUrl = "1597822319522.jpg",
+                        src = "https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ",
+                        color = "orange",
+                        closable = TRUE,
+                        br(),
+                        br(),
+                        p("Thank you for using this app. I designed it to make investing more fun and more accessible to investors."),
+                        br(),
+                        p(HTML("If you would like to see more of my work, please visit my <a href = 'https://www.linkedin.com/in/aaron-hardy-651b2410/'>LinkedIn</a> profile.")),
+                        br(),
+                        p(HTML("I also maintain a blog at <a href = 'https://www.freeanalystnotes.com/'>FreeAnalystNotes.com</a>. and
+                <a href = 'https://www.investwithr.com'>InvestWithR.com</a>")),
+                        div(actionButton(inputId = ns("toggleAdvanced"),
+                                         label = "Show email",
+                                         class="btn", # #707070
+                                         style="width: 130px;
+                                         background-color: aqua; color: black;
+                                         border: none; margin: 6px 0 6px 0;
+                                         box-shadow: 1px 3px 5px grey; margin-top: 25px;"),
+                            shinyjs::hidden(
+                                div(id = ns("advanced"), a("aaronhardy6@gmail.com", href="aaronhardy6@gmail.com"))
                             )
-                        )
-                )
+                        ),
+                        footer = "the footer"
+                        ),
+                    
+                    
+                    # div(style="display: flex; align-items: center;",
+                            # div(
+                            # div(tags$img(src="https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ", 
+                            #             alt="Aaron Hardy", 
+                            #             style="width: 180px; border-radius: 5px;
+                            #             box-shadow: 3px 5px 10px grey; margin-top: 25px;")
+                            #     ),
+                            # 
+                            # 
+                            # ),
+                            #         # style="float: right;"),
+                            # div(style="margin: 15px;",
+                            #     h2("Aaron Hardy"),
+                            #     h4("App Creator"),
+                                
+                        #     )
+                        # )
+                # )
                         
                         # boxPlus(
                         #     width = 12,
@@ -145,6 +165,7 @@ mod_dashboard_about_ui <- function(id, inflation) {
                         # )
                     
                 )
+            )
             
         ),
         

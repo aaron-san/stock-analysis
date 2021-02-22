@@ -1,4 +1,7 @@
 
+
+
+
 # shinyWidgetsGallery()
 
 # icons: desktop, gears, paint-brush,  "fa fa-users"
@@ -305,7 +308,7 @@ ui <- dashboardPagePlus(
             "Aaron Hardy",
             subtitle = a(href = "#", icon("circle", class = "text-success"), "Online"),
             # Image file should be in www/ subdir
-            image = "https://media-exp1.licdn.com/dms/image/C4E03AQG4F7-HObv3PA/profile-displayphoto-shrink_400_400/0/1611816873957?e=1617235200&v=beta&t=dsZLZ_3ID9EOu5NFE3yU8vpmZkxnkdrfllN7uO31guQ"
+            image = "https://media-exp1.licdn.com/dms/image/C5603AQHbVucr-vb2tQ/profile-displayphoto-shrink_400_400/0/1613798311833?e=1619049600&v=beta&t=6kOFbA2nHQbZXJn2ljdSzAy9kLXWQ_r8U3XJXgOPkgo"
         ),
         sidebarSearchForm(label = "Enter a number", "searchText", "searchButton"),
         sidebarMenu(
@@ -410,6 +413,32 @@ ui <- dashboardPagePlus(
                     tabPanel(
                         title = "returns",
                         br(),
+                        icon("folder-open"),
+                        icon("toolbox"),
+                        icon("cubes"),
+                        icon("plus-circle"),
+                        icon("chart-pie"),
+                        icon("clipboard"),
+                        icon("connectdevelop"),
+                        icon("file"),
+                        icon("deezer"),
+                        icon("feather"),
+                        icon("feather-alt"),
+                        icon("folder-open"),
+                        icon("hashtag"),
+                        icon("icicles"),
+                        icon("lock"),
+                        icon("lock-open"),
+                        icon("long-arrow-alt-right"),
+                        icon("map-signs"),
+                        icon("medapps"),
+                        icon("pagelines"),
+                        icon("ring"),
+                        icon("road"),
+                        icon("ruler"),
+                        icon("seedling"),
+                        icon("whmcs"),
+                        
                         mod_returns_returns_ui("returns", ticker_choices = ticker_choices)
                     ),
                     tabPanel(
@@ -553,7 +582,18 @@ server <- function(input, output, session) {
                               bond_yields = bond_yields)
     mod_dashboard_about_server(id = "dashboard_about")
     mod_charts_securities_server(id = "securities",
-                                 fundamentals_data = fundamentals_data)
+                                 is_1 = is_1,
+                                 is_2 = is_2,
+                                 is_3 = is_3,
+                                 is_4 = is_4,
+                                 bs_1 = bs_1,
+                                 bs_2 = bs_2,
+                                 bs_3 = bs_3,
+                                 bs_4 = bs_4,
+                                 cf_1 = cf_1,
+                                 cf_2 = cf_2,
+                                 cf_3 = cf_3,
+                                 cf_4 = cf_4)
     
 }
 
